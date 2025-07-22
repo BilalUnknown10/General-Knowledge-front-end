@@ -2,6 +2,7 @@ import React from 'react';
 import FirstSection from '../components/homePageComponents/firstSection';
 import AboutUs from '../components/homePageComponents/AboutUs';
 import GuideLine from '../components/homePageComponents/GuideLine';
+import UserFeedBack from '../components/homePageComponents/UserFeedBack';
 
 function Home() {
   return (
@@ -9,6 +10,7 @@ function Home() {
     <FirstSection/>
     <AboutUs/>
     <GuideLine/>
+    <UserFeedBack/>
    </div>
   )
 }

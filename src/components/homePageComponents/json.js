@@ -37,6 +37,32 @@ const GuideLineDetails = [
             "once you fill mcqs then you have no option to fill again",
         ]
     },
+];
+
+const UserFeedBacks = [
+    {
+        image : './feedbackImage.jpg',
+        userName : "Muhammad Bilal",
+        feedBack : "Lorem ipsum dolor  id quidem provident! Vel unde velit molestiae adipisci dolorum. Hic."
+    },
+
+     {
+        image : './feedbackImage.jpg',
+        userName : "Muhammad Bilal",
+        feedBack : "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur, voluptatem non delectus accusantium facilis velit aperiam tempore. Porro aperiam voluptatum id quidem provident! Vel unde velit molestiae adipisci dolorum. Hic."
+    },
+
+    {
+        image : './feedbackImage.jpg',
+        userName : "Muhammad Bilal",
+        feedBack : "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur, voluptatem non delectus accusantium facilis velit aperiam tempore. Porro aperiam voluptatum id quidem provident! Vel unde velit molestiae adipisci dolorum. Hic."
+    },
+
+    {
+        image : './feedbackImage.jpg',
+        userName : "Muhammad Bilal",
+        feedBack : "Lorem ipsum Vel unde velit molestiae adipisci dolorum. Hic."
+    },
 ]
 
-export {GuideLineDetails};
+export {GuideLineDetails, UserFeedBacks};
