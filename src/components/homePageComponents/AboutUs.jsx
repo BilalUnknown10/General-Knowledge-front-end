@@ -2,14 +2,14 @@ import React from "react";
 
 function AboutUs() {
   return (
-    <div className="md:py-28 py-12">
+    <div className=" mt-20">
       <div>
         <h1 className=" text-2xl md:text-3xl font-bold text-center tracking-widest">
           About Us
         </h1>
       </div>
 
-      <div className="tracking-wide md:text-2xl text-xl mt-5 md:flex justify-between gap-10 md:items-stretch space-y-10 md:space-y-0">
+      <div className="tracking-wide md:text-2xl mt-5 md:flex justify-between gap-10 md:items-stretch space-y-10 md:space-y-0">
   {/* Column 1 */}
   <div className="border md:w-1/3 w-full p-4 rounded-xl bg-green-300 shadow-md flex flex-col cursor-pointer hover:shadow-2xl">
     <h2 className="font-semibold mb-2">🧠 Who We Are</h2>
