@@ -16,7 +16,7 @@ function Footer() {
           Sharing insights, ideas, and inspiration. Thanks for visiting — see you again soon!
         </p>
         {/* <button className='mt-5 text-2xl px-6 py-2 border rounded-md tracking-wider text-white cursor-pointer transition-all duration-500 ease-in-out hover:w-full'>Get In Touch</button> */}
-        <button className="mt-5 text-xl w-[150px] py-2  rounded-md tracking-wider text-white cursor-pointer bg-green-700 hover:bg-green-700 transition-all duration-500 ease-in-out hover:w-full">
+        <button className="mt-5 md:text-xl w-[150px] py-2  rounded-md tracking-wider text-white cursor-pointer bg-green-700 hover:bg-green-700 transition-all duration-500 ease-in-out hover:w-full">
           Get In Touch
         </button>
       </div>

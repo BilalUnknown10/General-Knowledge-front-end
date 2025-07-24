@@ -2,6 +2,7 @@ import React, {  } from 'react'
 import DensityMediumIcon from '@mui/icons-material/DensityMedium';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import { Link } from 'react-router-dom';
 
 function Navbar() {
   gsap.registerPlugin(useGSAP);
@@ -40,7 +41,9 @@ function Navbar() {
           <div className='md:flex text-xl gap-x-2 headingWebLogin'>
             <button className=' rounded-md cursor-pointer hover:text-blue-800'>Signup</button>
             <div className='border-x-1 hidden md:block'></div>
-            <button className='  rounded-md cursor-pointer hover:text-blue-800'>Login</button>
+            <Link to={'/login'}>
+              <button className='  rounded-md cursor-pointer hover:text-blue-800'>Login</button>
+            </Link>
           </div>
         </div>
       </div>
