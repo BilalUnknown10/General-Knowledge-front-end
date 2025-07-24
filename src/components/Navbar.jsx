@@ -39,7 +39,9 @@ function Navbar() {
 
           {/* login signup */}
           <div className='md:flex text-xl gap-x-2 headingWebLogin'>
-            <button className=' rounded-md cursor-pointer hover:text-blue-800'>Signup</button>
+            <Link to={'/signup'}>
+              <button className=' rounded-md cursor-pointer hover:text-blue-800'>Signup</button>
+            </Link>
             <div className='border-x-1 hidden md:block'></div>
             <Link to={'/login'}>
               <button className='  rounded-md cursor-pointer hover:text-blue-800'>Login</button>

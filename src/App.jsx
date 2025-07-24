@@ -5,6 +5,7 @@ import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import MainLayout from './MainLayout'
+import Signup from './pages/Signup'
 
 
 
@@ -22,6 +23,7 @@ function App() {
       </MainLayout>}/>
       
       <Route path='/login' element={<Login/>}/>
+      <Route path='/signup' element={<Signup/>}/>
     </Routes>
     </BrowserRouter>
     {/* <Footer/> */}
