@@ -3,13 +3,14 @@ import Input from "../components/Input";
 import ClearIcon from '@mui/icons-material/Clear';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Signup() {
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [visiblePass, setVisiblePass] = useState(false);
+  const navigate = useNavigate();
 
   const visiblePassword = () => {
     setVisiblePass(!visiblePass);
@@ -26,7 +27,7 @@ function Signup() {
     }
   };
 
-  const Login = async () => {
+  const signUp = async () => {
     try {
         console.log("Name : ", userName);
       console.log("Email : ", email);
@@ -34,13 +35,15 @@ function Signup() {
 
       setEmail("");
       setPassword("");
+      setUserName("");
+      navigate('/login');
     } catch (error) {
       console.log("error in login component login function", error);
     }
   };
   return (
-    <div className="p-20 flex flex-col items-center h-[100vh] justify-center bg-green-500">
-      <div className=" relative border border-gray-500 shadow-md shadow-gray-500 rounded-md md:w-[400px] w-[350px] md:p-10 py-10 px-5 bg-white">
+    <div className="p-20 flex flex-col items-center h-[93vh] justify-center bg-green-800">
+      <div className=" relative border border-gray-500 shadow-md shadow-gray-500 rounded-md md:w-[400px] w-[380px] md:p-10 py-10 px-5 bg-white">
         <Link to={"/"}>
           <ClearIcon className="absolute text-white bg-red-500 top-2 cursor-pointer right-2" />
         </Link>
@@ -99,7 +102,7 @@ function Signup() {
         </div>
         <div className="text-end">
           <button
-            onClick={Login}
+            onClick={signUp}
             className="bg-green-500 cursor-pointer md:text-xl md:tracking-widest text-white px-8 py-2 rounded transition-all duration-300 w-full hover:bg-green-600"
           >
             Signup
