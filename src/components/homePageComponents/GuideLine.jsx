@@ -26,7 +26,7 @@ function GuideLine() {
                 <li className="font-bold md:text-2xl">{guide.title}</li>
                 <ul className={`list-disc  p-4 transition-all duration-500 ease-in-out ${openIndex ? "opacity-100" : "opacity-0"}`}>
                   {guide.guideLine.map((guide,i) => {
-                      return <li key={i} className="md:text-2xl">{guide}</li>
+                      return <li key={i} className="md:text-xl">{guide}</li>
                     })}
                     </ul>
               </div>

@@ -29,7 +29,7 @@ function Navbar() {
         stagger: 0.5,
       }
     );
-  });
+  },[]);
 
   const backToHome = () => {
     setMobileMenu(false)
@@ -72,7 +72,9 @@ function Navbar() {
                 <Link to={'/'}>
                   <li onClick={backToHome} className="cursor-pointer border-b">Home</li>
                 </Link>
-                <li className="cursor-pointer border-b">MCQS</li>
+                <Link to={'/mcqs'}>
+                  <li onClick={backToHome} className="cursor-pointer border-b">MCQS</li>
+                </Link>
                 <Link to={"/login"}>
                   <li className="cursor-pointer border-b">Login</li>
                 </Link>

@@ -5,7 +5,7 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 
 function Footer() {
   return (
-    <div className="bg-green-500">
+    <div className="bg-green-600 text-white">
       <div className=" md:p-8 md:flex gap-40">
       <div className="md:w-1/2 p-4">
         <h1 className="text-3xl border-b font-semibold tracking-widest mt-5">
