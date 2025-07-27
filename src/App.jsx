@@ -6,6 +6,7 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import MainLayout from './MainLayout'
 import Signup from './pages/Signup'
+import MCQS from './pages/MCQS'
 
 
 
@@ -21,7 +22,16 @@ function App() {
         <MainLayout>
           <Home/>
       </MainLayout>}/>
-      
+       {/* <Route path='/mcqs' element={
+        <MainLayout>
+          <MCQS/>
+      </MainLayout>}/> */}
+      <Route path='/mcqs' element = {
+        <>
+        <Navbar/>
+        <MCQS/>
+        </>
+        }/>
       <Route path='/login' element={<Login/>}/>
       <Route path='/signup' element={<Signup/>}/>
     </Routes>

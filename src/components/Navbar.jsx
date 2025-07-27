@@ -42,7 +42,7 @@ function Navbar() {
         {/* Logo or name of website */}
         <div className=" text-2xl md:text-3xl font-bold headingWebName">
           <h1 className="hover:text-blue-900 cursor-pointer">
-            General Knowledge
+            <Link to={'/'}>General Knowledge</Link>
           </h1>
         </div>
 
@@ -90,8 +90,12 @@ function Navbar() {
           {/* pages */}
           <div className="headingWebpages">
             <ul className="md:flex text-2xl font-semibold gap-x-5">
-              <li className="cursor-pointer hover:text-blue-800">Home</li>
-              <li className="cursor-pointer hover:text-blue-800">MCQS</li>
+              <Link to={'/'}>
+                <li className="cursor-pointer hover:text-blue-800">Home</li>
+              </Link>
+              <Link to={'/mcqs'}>
+                <li className="cursor-pointer hover:text-blue-800">MCQS</li>
+              </Link>
             </ul>
           </div>
 
