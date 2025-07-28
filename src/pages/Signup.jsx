@@ -1,17 +1,27 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Input from "../components/Input";
 import ClearIcon from '@mui/icons-material/Clear';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { Link, useNavigate } from "react-router-dom";
+import UserContext from "../Store/UserContext";
+import axios from 'axios';
 
 function Signup() {
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [visiblePass, setVisiblePass] = useState(false);
-  const navigate = useNavigate();
+  const [userNameError, setUserNameError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [invalidEmail, setInvalidEmail] = useState("");
+  const [existUser, setExistUser] = useState("")
 
+  const navigate = useNavigate();
+  const {User_Api} = useContext(UserContext);
+
+  // Functions
   const visiblePassword = () => {
     setVisiblePass(!visiblePass);
   };
@@ -29,18 +39,31 @@ function Signup() {
 
   const signUp = async () => {
     try {
-        console.log("Name : ", userName);
-      console.log("Email : ", email);
-      console.log("Password : ", password);
+      const response = await axios.post(`${User_Api}/userRegistration`,{
+        userName, email, password
+      });
+     console.log(response)
 
       setEmail("");
       setPassword("");
       setUserName("");
       navigate('/login');
     } catch (error) {
-      console.log("error in login component login function", error);
-    }
+      // console.log("error in signup component signup function", error.response.data);
+      const responseError = error.response.data;
+      if(!userName) return setUserNameError(responseError);
+      if(!email) return setEmailError(responseError);
+      if(!password) return setPasswordError(responseError);
+      console.log(responseError);
+      if(responseError.field === "invalidGmail"){
+        setInvalidEmail(responseError.message);
+      }
+      if(responseError.field === "existUser"){
+        setExistUser(responseError.message);
+      }
+      }
   };
+
   return (
     <div className="p-20 flex flex-col items-center h-[100vh] justify-center bg-green-800">
       <div className=" relative border border-gray-500 shadow-md shadow-gray-500 rounded-md md:w-[400px] w-[380px] md:p-10 py-10 px-5 bg-green-50">
@@ -50,9 +73,10 @@ function Signup() {
         <h1 className="md:text-3xl text-2xl text-center border-b pb-2 font-bold tracking-widest">
           Sign Up
         </h1>
+        {existUser ? <p className="text-red-500 text-center mt-3">{existUser}</p> : ""}
         <div>
           <Input
-            mainDivClassName={"my-5 mt-12"}
+            mainDivClassName={"mt-5 mt-12"}
             label={"Name"}
             type={"text"}
             name={"name"}
@@ -62,10 +86,11 @@ function Signup() {
             placeholder={"Enter Your Name"}
             onChange={handleInput}
           />
+          {!userName ? <span className="text-red-500">{userNameError}</span> : ""}
         </div>
         <div>
           <Input
-            mainDivClassName={"my-5"}
+            mainDivClassName={"mt-5"}
             label={"Email"}
             type={"email"}
             name={"email"}
@@ -75,10 +100,12 @@ function Signup() {
             placeholder={"Example123@gmail.com"}
             onChange={handleInput}
           />
+          {!email ? <span className="text-red-500">{emailError}</span> : ""}
+          {invalidEmail ? <span className="text-red-500">{invalidEmail}</span> : ""}
         </div>
-        <div className="relative">
+        <div className="relative mb-5">
           <Input
-            mainDivClassName={"my-5"}
+            mainDivClassName={"mt-5"}
             label={"Password"}
             type={`${visiblePass ? "text" : "password"}`}
             name={"password"}
@@ -88,6 +115,7 @@ function Signup() {
             placeholder={"Password"}
             onChange={handleInput}
           />
+          {!password ? <span className="text-red-500">{passwordError}</span> : ""}
           {visiblePass ? (
             <VisibilityIcon
               className="absolute top-8 md:top-12 cursor-pointer right-4"

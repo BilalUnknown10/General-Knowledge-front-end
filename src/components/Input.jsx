@@ -13,6 +13,7 @@ function Input({type, inputClassName, inputValue, inputId, mainDivClassName, lab
         id={`${inputId}`}
         placeholder={`${placeholder}`}
         onChange={onChange}
+        required
       />
     </div>
   );
