@@ -3,13 +3,21 @@ import Input from "../components/Input";
 import ClearIcon from '@mui/icons-material/Clear';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { Link } from "react-router-dom";
+import UserContext from "../Store/UserContext";
+import { Link, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import axios from 'axios';
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loginError, setLoginError] = useState("");
   const [visiblePass, setVisiblePass] = useState(false);
+
+  const navigate = useNavigate();
   
+  
+  const {User_Api, savedTokeInLocalStorage} = useContext(UserContext);
 
   const visiblePassword = () => {
     setVisiblePass(!visiblePass);
@@ -29,13 +37,23 @@ function Login() {
 
   const Login = async () => {
     try {
-      console.log("Email : ", email);
-      console.log("Password : ", password);
 
-      setEmail("");
-      setPassword("")
-    } catch (error) {
-      console.log("error in login component login function",error)
+      const response = await axios.post(`${User_Api}/userLogin`,{
+        email, password
+      });
+
+      if(response.status === 200){
+        const {token, message} = response.data
+        await savedTokeInLocalStorage(token);
+        console.log(message);
+
+        setEmail("");
+        setPassword("");
+        navigate('/');
+      }
+      } catch (error) {
+      // console.log("error in login component login function",error.response);
+      setLoginError(error.response.data)
     }
   }
 
@@ -46,6 +64,7 @@ function Login() {
         <h1 className="md:text-3xl text-2xl text-center border-b pb-2 font-bold tracking-widest">
           Login
         </h1>
+        { loginError ? <p className="text-red-500 text-center mt-3">{loginError}</p> : ""}
         <div>
           <Input
           mainDivClassName={"my-5 mt-12"}

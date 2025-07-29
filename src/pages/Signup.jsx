@@ -42,19 +42,19 @@ function Signup() {
       const response = await axios.post(`${User_Api}/userRegistration`,{
         userName, email, password
       });
-     console.log(response)
-
-      setEmail("");
-      setPassword("");
-      setUserName("");
-      navigate('/login');
+      
+      if(response.status == 201){
+        setEmail("");
+        setPassword("");
+        setUserName("");
+        navigate('/login');
+      }
     } catch (error) {
       // console.log("error in signup component signup function", error.response.data);
       const responseError = error.response.data;
       if(!userName) return setUserNameError(responseError);
       if(!email) return setEmailError(responseError);
       if(!password) return setPasswordError(responseError);
-      console.log(responseError);
       if(responseError.field === "invalidGmail"){
         setInvalidEmail(responseError.message);
       }
@@ -62,6 +62,7 @@ function Signup() {
         setExistUser(responseError.message);
       }
       }
+      
   };
 
   return (
