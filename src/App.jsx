@@ -23,10 +23,7 @@ function App() {
         <MainLayout>
           <Home/>
       </MainLayout>}/>
-       {/* <Route path='/mcqs' element={
-        <MainLayout>
-          <MCQS/>
-      </MainLayout>}/> */}
+   
       <Route path='/mcqs' element = {
         <>
         <Navbar/>

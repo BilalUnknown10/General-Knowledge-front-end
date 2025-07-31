@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 import {questions} from '../components/homePageComponents/json.js'
+import UserContext from "../Store/UserContext.js";
+import { Navigate } from "react-router-dom";
 
 function MCQS() {
 
   const [nextTooltip, setNextToolTip] = useState(false);
   const [prevTooltip, setPrevToolTip] = useState(false);
   const [questionNumber, setQuestionNumber] = useState(0);
+
+  const {userDetails} = useContext(UserContext);
 
   // next mcqs
 const nextMcqs = (e) => {
@@ -22,6 +26,10 @@ const prevMcqs = () => {
     setQuestionNumber(prev => prev - 1);
   }
 };
+
+if(!userDetails.isEmailVerified) {
+  return <Navigate to={'/login'}></Navigate>
+}
 
   return (
     <div className="p-5 md:p-10 bg-green-100 h-[90vh] flex justify-center flex-col items-center">
