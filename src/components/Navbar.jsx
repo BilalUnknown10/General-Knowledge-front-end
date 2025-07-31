@@ -2,25 +2,33 @@ import React from "react";
 import DensityMediumIcon from "@mui/icons-material/DensityMedium";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useContext } from "react";
 import UserContext from "../Store/UserContext";
-
+import LogoutIcon from "@mui/icons-material/Logout";
 
 function Navbar() {
+  const navigate = useNavigate();
   gsap.registerPlugin(useGSAP);
 
-  const { mobileMenu, setMobileMenu, isUserLogin, setIsUserLogin } = useContext(UserContext);
+  const {
+    mobileMenu,
+    setMobileMenu,
+    isUserLogin,
+    setIsUserLogin,
+    userDetails,
+    generateOTP,
+  } = useContext(UserContext);
 
   const openMenu = () => {
     setMobileMenu(!mobileMenu);
   };
 
-  const logout =  async () => {
+  const logout = async () => {
     localStorage.removeItem("GKT");
     setIsUserLogin(false);
-  }
+  };
 
   useGSAP(() => {
     const navbarTimeline = gsap.timeline();
@@ -34,12 +42,12 @@ function Navbar() {
         stagger: 0.5,
       }
     );
-  },[]);
+  }, []);
 
   const backToHome = () => {
-    setMobileMenu(false)
-  }
-  
+    setMobileMenu(false);
+  };
+
   return (
     <>
       {/* main container of navbar */}
@@ -47,7 +55,7 @@ function Navbar() {
         {/* Logo or name of website */}
         <div className=" text-2xl md:text-3xl font-bold headingWebName">
           <h1 className="hover:text-blue-900 cursor-pointer">
-            <Link to={'/'}>General Knowledge</Link>
+            <Link to={"/"}>General Knowledge</Link>
           </h1>
         </div>
 
@@ -60,59 +68,114 @@ function Navbar() {
               transition-transform duration-700 ease-in-out
               ${mobileMenu ? "rotate-90" : "rotate-0"}
               inline-block
-            `}>
+            `}
+          >
             <DensityMediumIcon className="!text-3xl" />
           </div>
         </div>
 
         {/* Mobile menu */}
-       <div className={`absolute right-0 transition-all duration-700 ease-in-out ${mobileMenu ? "top-[50px] opacity-100" : "top-[-500px] opacity-0"} z-50 w-full bg-green-800  mobileMenu`}>
+        <div
+          className={`absolute right-0 transition-all duration-700 ease-in-out ${
+            mobileMenu ? "top-[50px] opacity-100" : "top-[-500px] opacity-0"
+          } z-50 w-full bg-green-800  mobileMenu`}
+        >
           <div className="p-5">
             <div className="text-center flex flex-col justify-center items-center">
-              {isUserLogin ? <div className="h-24 w-24 rounded-full">
-                <img src="./feedbackImage.jpg" alt="profile image" className="h-20 w-20 object-cover rounded-full" />
-                <h1>User Name</h1>
-              </div> : <>
-                <AccountCircleIcon className={`!text-7xl`} />
-              </>}
+              {isUserLogin ? (
+                <div className="flex justify-center items-center flex-col">
+                  {userDetails?.profileImage ? (
+                    <div className="h-20 w-20 rounded-full">
+                      <img
+                        src={userDetails?.profileImage}
+                        alt="profile image"
+                        className="h-full w-full object-cover rounded-full"
+                      />
+                    </div>
+                  ) : (
+                    <AccountCircleIcon className={`!text-7xl`} />
+                  )}
+                  <h1>{userDetails.userName}</h1>
+                  <p className="">
+                    {userDetails.email} <br />
+                    {userDetails.isEmailVerified ? (
+                      <span>Verified Account</span>
+                    ) : (
+                      <span>Unverified Account</span>
+                    )}
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <AccountCircleIcon className={`!text-7xl`} />
+                </>
+              )}
             </div>
             <div className="mt-5">
               <ul className=" flex flex-col gap-6 text-xl font-semibold">
-                <Link to={'/'}>
-                  <li onClick={backToHome} className="cursor-pointer border-b">Home</li>
+                <Link to={"/"}>
+                  <li onClick={backToHome} className="cursor-pointer border-b">
+                    Home
+                  </li>
                 </Link>
-                <Link to={'/mcqs'}>
-                  <li onClick={backToHome} className="cursor-pointer border-b">MCQS</li>
+                <Link to={"/mcqs"}>
+                  <li onClick={backToHome} className="cursor-pointer border-b">
+                    MCQS
+                  </li>
                 </Link>
-                { isUserLogin ? <>
-                  <Link onClick={logout}>
-                  <li className="cursor-pointer border-b">Logout</li>
-                </Link>
-                </> :
-                <>
-                  <Link to={"/login"}>
-                  <li onClick={backToHome} className="cursor-pointer border-b">Login</li>
-                </Link>
-                <Link to={"/signup"}>
-                  <li onClick={backToHome} className="cursor-pointer border-b">Signup</li>
-                </Link>
-                </>
-                }
+                {isUserLogin ? (
+                  <>
+                    <Link onClick={logout}>
+                      <li className="cursor-pointer border-b">Logout</li>
+                    </Link>
+                    {userDetails.isEmailVerified === false && (
+                      <Link>
+                        <li
+                          onClick={async () => {
+                            await generateOTP(); // optional if needed
+                            navigate("/verification"); // using useNavigate from react-router
+                          }}
+                          className="cursor-pointer border-b"
+                        >
+                          Verify your account
+                        </li>
+                      </Link>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <Link to={"/login"}>
+                      <li
+                        onClick={backToHome}
+                        className="cursor-pointer border-b"
+                      >
+                        Login
+                      </li>
+                    </Link>
+                    <Link to={"/signup"}>
+                      <li
+                        onClick={backToHome}
+                        className="cursor-pointer border-b"
+                      >
+                        Signup
+                      </li>
+                    </Link>
+                  </>
+                )}
               </ul>
             </div>
           </div>
         </div>
-        
 
         {/* pages login and signup of website */}
         <div className=" md:flex md:items-center md:gap-x-20 hidden">
           {/* pages */}
           <div className="headingWebpages">
             <ul className="md:flex text-2xl font-semibold gap-x-5">
-              <Link to={'/'}>
+              <Link to={"/"}>
                 <li className="cursor-pointer hover:text-blue-800">Home</li>
               </Link>
-              <Link to={'/mcqs'}>
+              <Link to={"/mcqs"}>
                 <li className="cursor-pointer hover:text-blue-800">MCQS</li>
               </Link>
             </ul>
@@ -120,30 +183,53 @@ function Navbar() {
 
           {/* login signup */}
           <div className="md:flex text-xl items-center gap-x-3 headingWebLogin">
-            {isUserLogin ? <>
-            <div className="w-16 h-16 rounded-full">
-              <img className=" w-full rounded-full h-full object-cover" src="./feedbackImage.jpg" alt="profile image" />
-            </div>
-            <div className="border-r-1 h-16 hidden md:block"></div>
-            <Link>
-              <button onClick={logout} className=" rounded-md cursor-pointer hover:text-blue-800">
-                Logout
-              </button>
-            </Link> </> :
-            <>
-              <Link to={"/signup"}>
-              <button className=" rounded-md cursor-pointer hover:text-blue-800">
-                Signup
-              </button>
-            </Link>
-            <div className="border-r-1 h-7 hidden md:block"></div>
-            <Link to={"/login"}>
-              <button className="  rounded-md cursor-pointer hover:text-blue-800">
-                Login
-              </button>
-            </Link>
-            </>
-            }
+            {isUserLogin ? (
+              <>
+                {userDetails.profileImage ? (
+                  <div className="flex gap-2 items-center">
+                    <div className="w-16 h-16 rounded-full">
+                      <img
+                        className=" w-full rounded-full h-full object-cover"
+                        src={userDetails?.profileImage}
+                        alt="profile image"
+                      />
+                    </div>
+                    <div>
+                      <h1>{userDetails.userName}</h1>
+                      {/* <p>{userDetails.email}</p> */}
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <AccountCircleIcon className={`!text-7xl`} />
+                  </div>
+                )}
+                <div className="border-r-1 h-16 hidden md:block"></div>
+                <Link>
+                  <button
+                    onClick={logout}
+                    className=" rounded-md cursor-pointer hover:text-blue-800"
+                  >
+                    {" "}
+                    LogOut
+                  </button>
+                </Link>{" "}
+              </>
+            ) : (
+              <>
+                <Link to={"/signup"}>
+                  <button className=" rounded-md cursor-pointer hover:text-blue-800">
+                    Signup
+                  </button>
+                </Link>
+                <div className="border-r-1 h-7 hidden md:block"></div>
+                <Link to={"/login"}>
+                  <button className="  rounded-md cursor-pointer hover:text-blue-800">
+                    Login
+                  </button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -7,6 +7,7 @@ import Login from './pages/Login'
 import MainLayout from './MainLayout'
 import Signup from './pages/Signup'
 import MCQS from './pages/MCQS'
+import Verification from './components/Verification'
 
 
 
@@ -34,6 +35,7 @@ function App() {
         }/>
       <Route path='/login' element={<Login/>}/>
       <Route path='/signup' element={<Signup/>}/>
+      <Route path='/verification' element={<Verification/>}/>
     </Routes>
     </BrowserRouter>
     {/* <Footer/> */}
