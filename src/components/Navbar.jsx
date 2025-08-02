@@ -30,19 +30,19 @@ function Navbar() {
     setIsUserLogin(false);
   };
 
-  useGSAP(() => {
-    const navbarTimeline = gsap.timeline();
-    navbarTimeline.from(
-      [".headingWebName", ".headingWebpages", ".headingWebLogin"],
-      {
-        y: -50,
-        opacity: 0,
-        duration: 1,
-        ease: "power3.out",
-        stagger: 0.5,
-      }
-    );
-  }, []);
+  // useGSAP(() => {
+  //   const navbarTimeline = gsap.timeline();
+  //   navbarTimeline.from(
+  //     [".headingWebName", ".headingWebpages", ".headingWebLogin"],
+  //     {
+  //       y: -50,
+  //       opacity: 0,
+  //       duration: 1,
+  //       ease: "power3.out",
+  //       stagger: 0.5,
+  //     }
+  //   );
+  // }, []);
 
   const backToHome = () => {
     setMobileMenu(false);

@@ -1,32 +1,30 @@
 import React, { useContext, useEffect, useState } from "react";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
-import {questions} from '../components/homePageComponents/json.js'
+// import {questions} from '../components/homePageComponents/json.js'
 import UserContext from "../Store/UserContext.js";
 import { Navigate, useNavigate } from "react-router-dom";
+import axios  from 'axios';
+
 
 function MCQS() {
 
   const [nextTooltip, setNextToolTip] = useState(false);
   const [prevTooltip, setPrevToolTip] = useState(false);
   const [questionNumber, setQuestionNumber] = useState(0);
+  const [allQuestions, setAllQuestions] = useState([]);
+  const [submitAnswer, setSubmitAnswer] = useState("");
 
   const navigate = useNavigate();
 
-  const {userDetails, loginUserToken} = useContext(UserContext);
+  const {userDetails, loginUserToken, User_Api, refreshUserDetails} = useContext(UserContext);
 
   // next mcqs
 const nextMcqs = (e) => {
   e.preventDefault();
-  if (questionNumber < questions.length - 1) {
+  if (questionNumber < allQuestions.length -1) {
     setQuestionNumber(prev => prev + 1);
   }
 };
-
-useEffect( () => {
-  if(!loginUserToken){
-    navigate('/login')
-  }
-},[loginUserToken]);
 
 // previous mcqs
 const prevMcqs = () => {
@@ -35,7 +33,60 @@ const prevMcqs = () => {
   }
 };
 
-if(!userDetails.isEmailVerified) {
+const submittedAnswer = async (e) => {
+   e.preventDefault();
+  try {
+
+  const response = await axios.post(`${User_Api}/userSubmitAnswer/${allQuestions[questionNumber]._id}`,{submitAnswer},{
+    headers : {
+      Authorization : `Bearer ${loginUserToken}`
+    }
+  });
+
+  if(response.status === 200){
+    console.log(response.data.saveAnswer.submittedAnswers);
+    await refreshUserDetails();
+     setQuestionNumber(response.data.saveAnswer.submittedAnswers.length-1)
+  }
+  } catch (error) {
+    console.log("Error in submitted answers : ", error);
+  }
+}
+
+const inputValue = (e) => {
+  const value = e.target.value;
+  setSubmitAnswer(value);
+}
+
+
+useEffect( () => {
+  if(!loginUserToken){
+    navigate('/');
+  }
+
+  const getAllQuestions = async () => {
+    try {
+      const response = await axios.get(`${User_Api}/getAllQuestions`,{
+        headers : {
+          Authorization : `Bearer ${loginUserToken}`
+        }
+      });
+      setAllQuestions(response.data)
+    } catch (error) {
+      console.log("Error in getting all mcqs function : ", error);
+    }
+  }
+
+  getAllQuestions();
+  
+  const convertToNumber = Number(userDetails?.submittedAnswers?.length-1 || 0);
+  setQuestionNumber(convertToNumber);
+},[loginUserToken, navigate, User_Api, userDetails]);
+
+console.log(questionNumber)
+
+
+if(userDetails.isEmailVerified === false) {
   return <Navigate to={'/login'}></Navigate>
 }
 
@@ -77,26 +128,48 @@ if(!userDetails.isEmailVerified) {
       <div className="border border-green-500 rounded-b-md h-[48vh] w-full md:w-1/2 md:min-h-1/2  relative overflow-x-hidden">
         <ul className={`md:px-10 px-5 mt-10`}>
           <li className=" flex gap-2 font-bold text-xl">
-            {questionNumber+1}
-            <p>{questions[questionNumber].question}</p>
+            {questionNumber + 1}.
+            <p>{allQuestions.length > 0 && allQuestions[questionNumber].question}</p>
           </li>
         </ul>
+
+      {userDetails?.submittedAnswers?.[questionNumber] ? (
+        <div>
+          {userDetails?.submittedAnswers?.[questionNumber]?.status === true ? (
+            <div className="py-10 px-10">
+              <h1 className="font-semibold md:text-xl text-green-600 ">Ohh Correct Answer</h1>
+              <p className="py-5">Your Answer is = <strong className="text-green-600 ">{userDetails?.submittedAnswers?.[questionNumber]?.answer}</strong></p>
+              <p>Correct Answer is = <strong className="text-green-600 ">{allQuestions?.[questionNumber]?.correctAnswer}</strong></p>
+            </div>
+          ) : (
+            <div className="py-10 px-10">
+              <h1 className="font-semibold md:text-xl text-red-600">Opps Wrong Answer</h1>
+              <p className="py-5">Your Answer is = <strong className="text-red-600">{userDetails?.submittedAnswers?.[questionNumber]?.answer}</strong></p>
+              <p>Correct Answer is = <strong className="text-green-500 ">{allQuestions?.[questionNumber]?.correctAnswer}</strong></p>
+            </div>
+          )}
+        </div>
+      ) : (
+      <div>
         <form className="space-y-4 p-10">
-          {questions[questionNumber].answers.map((answer, i) => {
-            return <label className="block" key={i}>
+          {allQuestions.length > 0 && allQuestions[questionNumber].answers.map((answer, i) => {
+            return <label className="block cursor-pointer" key={i}>
             <input
               type="radio"
               name="question1"
-              value="option1"
-              className="mr-2"
+              value={`${answer}`}
+              className="mr-2 cursor-pointer"
+              onClick={inputValue}
             />
             {answer}
           </label>
           })}
         </form>
         <div className=" text-right m-5">
-            <button onClick={nextMcqs} className="bg-green-500 px-5 py-2 rounded-md hover:cursor-pointer text-white hover:bg-green-700 transition-all duration-500 ease-in-out border-none">Move Next</button>
+            <button onClick={submittedAnswer} className="bg-green-500 px-5 py-2 rounded-md hover:cursor-pointer text-white hover:bg-green-700 transition-all duration-500 ease-in-out border-none">Move Next</button>
           </div>
+      </div>
+    )}
       </div>
     </div>
   );
