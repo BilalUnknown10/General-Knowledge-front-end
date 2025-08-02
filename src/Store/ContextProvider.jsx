@@ -33,6 +33,25 @@ function ContextProvider({ children }) {
     }
   };
 
+  const refreshUserDetails = async (loginUserToken) => {
+        try {
+          const response = await axios.get(`${User_Api}/userDetails`, {
+            headers: {
+              Authorization: `Bearer ${loginUserToken}`,
+            },
+          });
+
+          if (response.status === 200) {
+            setUserDetails(response.data);
+          }
+        } catch (error) {
+          console.log(
+            "error in userDetails function in context provider file",
+            error
+          );
+        }
+      };
+
   useEffect(() => {
     const token = localStorage.getItem("GKT");
 
@@ -58,7 +77,7 @@ function ContextProvider({ children }) {
       };
       userDetail(token);
     }
-  }, [isUserLogin, User_Api, userDetails]);
+  }, [isUserLogin, User_Api]);
 
   return (
     <UserContext.Provider
@@ -73,6 +92,7 @@ function ContextProvider({ children }) {
         userDetails,
         loginUserToken,
         generateOTP,
+        refreshUserDetails
       }}
     >
       {children}

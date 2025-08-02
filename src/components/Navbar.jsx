@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DensityMediumIcon from "@mui/icons-material/DensityMedium";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -6,9 +6,9 @@ import { Link, useNavigate } from "react-router-dom";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useContext } from "react";
 import UserContext from "../Store/UserContext";
-import LogoutIcon from "@mui/icons-material/Logout";
 
 function Navbar() {
+  const [emailVerifyMenu, setEmailVerifyMenu] = useState(false);
   const navigate = useNavigate();
   gsap.registerPlugin(useGSAP);
 
@@ -47,6 +47,8 @@ function Navbar() {
   const backToHome = () => {
     setMobileMenu(false);
   };
+
+  useEffect( () => {},[]);
 
   return (
     <>
@@ -137,7 +139,7 @@ function Navbar() {
                           }}
                           className="cursor-pointer border-b"
                         >
-                          Verify your account
+                          Verify Your Account
                         </li>
                       </Link>
                     )}
@@ -187,9 +189,9 @@ function Navbar() {
               <>
                 {userDetails.profileImage ? (
                   <div className="flex gap-2 items-center">
-                    <div className="w-16 h-16 rounded-full">
+                    <div onClick={() => setEmailVerifyMenu(!emailVerifyMenu)} className="w-16 h-16 rounded-full">
                       <img
-                        className=" w-full rounded-full h-full object-cover"
+                        className=" w-full rounded-full cursor-pointer h-full object-cover"
                         src={userDetails?.profileImage}
                         alt="profile image"
                       />
@@ -200,8 +202,17 @@ function Navbar() {
                     </div>
                   </div>
                 ) : (
-                  <div>
-                    <AccountCircleIcon className={`!text-7xl`} />
+                  <div
+                    onClick={() => setEmailVerifyMenu(!emailVerifyMenu)}
+                    className="flex items-center gap-2"
+                  >
+                    <AccountCircleIcon
+                      className={`!text-7xl hover:cursor-pointer`}
+                    />
+                    <div>
+                      <h1>{userDetails.userName}</h1>
+                      {/* <p>{userDetails.email}</p> */}
+                    </div>
                   </div>
                 )}
                 <div className="border-r-1 h-16 hidden md:block"></div>
@@ -214,6 +225,58 @@ function Navbar() {
                     LogOut
                   </button>
                 </Link>{" "}
+                <div
+                  onMouseLeave={() => setEmailVerifyMenu(false)}
+                  className={`flex flex-col justify-center transition-all duration-500 ease-in-out h-[250px] w-[264px] absolute top-19 bg-green-600  border-t rounded-l-md ${
+                    emailVerifyMenu
+                      ? "translate-y-0 opacity-100"
+                      : "translate-y-[-350px] opacity-0"
+                  }`}
+                >
+                  <div className="text-center">
+                    {userDetails.profileImage ? (
+                     <div className="flex flex-col justify-center items-center">
+                       <div className="w-24 h-24 rounded-full relative overflow-hidden">
+                        <img
+                          className=" w-full rounded-full h-full object-cover"
+                          src={userDetails?.profileImage}
+                          alt="profile image"
+                        />
+                      <span className="bg-black bottom-0 w-full left-0 opacity-0 transition-all duration-500 ease-in-out hover:opacity-70 cursor-pointer absolute">Edit</span>
+                      </div>
+                     </div>
+                    ) : (
+                      <AccountCircleIcon
+                        className={`!text-7xl hover:cursor-pointer`}
+                      />
+                    )}
+                    <h1>{userDetails.userName}</h1>
+                    <p>{userDetails.email}</p>
+                  </div>
+                  {userDetails?.isEmailVerified ? (
+                    <div className="text-center">
+                      <p>Verified Account</p>
+                    </div>
+                  ) : (
+                    <div className="text-center">
+                      <p>UnVerified Account</p>
+                    </div>
+                  )}
+                  { userDetails.isEmailVerified !== true && (
+                    <div className="text-center mt-5">
+                    <button
+                      onClick={async () => {
+                        await generateOTP(); // optional if needed
+                        navigate("/verification"); // using useNavigate from react-router
+                      }}
+                      className="border rounded-md px-6 py-2 cursor-pointer transition-all duration-500 ease-in-out hover:border-green-300 shadow-md hover:text-black hover:bg-green-300"
+                    >
+                      Verify Your Account
+                    </button>
+                  </div>
+                  )
+                  }
+                </div>
               </>
             ) : (
               <>

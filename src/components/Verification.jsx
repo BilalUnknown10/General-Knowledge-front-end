@@ -15,7 +15,7 @@ function Verification() {
 
   const navigate = useNavigate();
 
-  const { userDetails, User_Api, loginUserToken } = useContext(UserContext);
+  const { userDetails, User_Api, loginUserToken, refreshUserDetails } = useContext(UserContext);
 
   const handleEvent = (e) => {
     const OTP_Value = e.target.value;
@@ -40,6 +40,7 @@ function Verification() {
       if(response.status === 200) {
         setOTP("");
         console.log(response.data.message);
+        await refreshUserDetails(loginUserToken);
         navigate("/");
       }
     } catch (error) {
