@@ -1,8 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 import {questions} from '../components/homePageComponents/json.js'
 import UserContext from "../Store/UserContext.js";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 function MCQS() {
 
@@ -10,7 +10,9 @@ function MCQS() {
   const [prevTooltip, setPrevToolTip] = useState(false);
   const [questionNumber, setQuestionNumber] = useState(0);
 
-  const {userDetails} = useContext(UserContext);
+  const navigate = useNavigate();
+
+  const {userDetails, loginUserToken} = useContext(UserContext);
 
   // next mcqs
 const nextMcqs = (e) => {
@@ -19,6 +21,12 @@ const nextMcqs = (e) => {
     setQuestionNumber(prev => prev + 1);
   }
 };
+
+useEffect( () => {
+  if(!loginUserToken){
+    navigate('/login')
+  }
+},[loginUserToken]);
 
 // previous mcqs
 const prevMcqs = () => {
@@ -33,7 +41,7 @@ if(!userDetails.isEmailVerified) {
 
   return (
     <div className="p-5 md:p-10 bg-green-100 h-[90vh] flex justify-center flex-col items-center">
-       <div className="flex items-center justify-between  text-white p-5 bg-green-500 w-full md:w-1/2 rounded-t-md">
+       <div className="flex items-center justify-between  relative text-white p-5 bg-green-500 w-full md:w-1/2 rounded-t-md">
           <h1 className="text-2xl font-bold">Question</h1>
           <div className="flex items-center gap-5 ">
             <div
