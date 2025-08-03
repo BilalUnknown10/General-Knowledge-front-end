@@ -7,6 +7,7 @@ import UserContext from "../Store/UserContext";
 import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import axios from 'axios';
+import { toast } from "react-toastify";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -46,6 +47,7 @@ function Login() {
         const {token, message} = response.data
         await savedTokeInLocalStorage(token);
         console.log(message);
+        toast.success(message);
 
         setEmail("");
         setPassword("");
@@ -53,7 +55,8 @@ function Login() {
       }
       } catch (error) {
       // console.log("error in login component login function",error.response);
-      setLoginError(error.response.data)
+      setLoginError(error.response.data);
+      toast.error(error.response.data);
     }
   }
 

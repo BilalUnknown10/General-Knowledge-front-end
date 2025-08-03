@@ -6,6 +6,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../Store/UserContext";
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 function Signup() {
   const [userName, setUserName] = useState("");
@@ -19,7 +20,7 @@ function Signup() {
   const [existUser, setExistUser] = useState("")
 
   const navigate = useNavigate();
-  const {User_Api} = useContext(UserContext);
+  const {User_Api, savedTokeInLocalStorage} = useContext(UserContext);
 
   // Functions
   const visiblePassword = () => {
@@ -44,10 +45,12 @@ function Signup() {
       });
       
       if(response.status == 201){
+        await savedTokeInLocalStorage(response.data.token)
         setEmail("");
         setPassword("");
         setUserName("");
-        navigate('/login');
+        toast.success(response.data.message);
+        navigate('/');
       }
     } catch (error) {
       // console.log("error in signup component signup function", error.response.data);
@@ -61,8 +64,8 @@ function Signup() {
       if(responseError.field === "existUser"){
         setExistUser(responseError.message);
       }
+      toast.error(error.response.data.message)
       }
-      
   };
 
   return (

@@ -20,10 +20,11 @@ const GuideLineDetails = [
     {
         title : "How to verify your email",
         guideLine : [
-            "Click on verify now",
-            "we will send OTP on your registered email",
-            "Enter your OTP",
-            "click on verify button"
+            "Click on profile",
+            "Click verify your account button",
+            "An OTP will be sent to your registered email",
+            "Enter 4-digit OTP",
+            "click verify button"
         ]
     },
 

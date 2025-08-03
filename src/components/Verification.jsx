@@ -6,6 +6,7 @@ import Input from "./Input";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Verification() {
   const [OTP, setOTP] = useState("");
@@ -39,8 +40,9 @@ function Verification() {
       
       if(response.status === 200) {
         setOTP("");
-        console.log(response.data.message);
+        // console.log(response.data.message);
         await refreshUserDetails(loginUserToken);
+        toast.success(response.data.message);
         navigate("/");
       }
     } catch (error) {

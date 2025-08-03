@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useContext } from "react";
 import UserContext from "../Store/UserContext";
+import { toast } from "react-toastify";
 
 function Navbar() {
   const [emailVerifyMenu, setEmailVerifyMenu] = useState(false);
@@ -28,6 +29,7 @@ function Navbar() {
   const logout = async () => {
     localStorage.removeItem("GKT");
     setIsUserLogin(false);
+    toast.success("Logout Successfully")
   };
 
   // useGSAP(() => {
@@ -227,7 +229,7 @@ function Navbar() {
                 </Link>{" "}
                 <div
                   onMouseLeave={() => setEmailVerifyMenu(false)}
-                  className={`flex flex-col justify-center transition-all duration-500 ease-in-out h-[250px] w-[264px] absolute top-19 bg-green-600  border-t rounded-l-md ${
+                  className={`flex flex-col justify-center transition-all duration-500 ease-in-out h-[250px] w-[264px] absolute top-19 right-0 bg-green-600  border-t rounded-l-md ${
                     emailVerifyMenu
                       ? "translate-y-0 opacity-100"
                       : "translate-y-[-350px] opacity-0"
@@ -255,7 +257,7 @@ function Navbar() {
                   </div>
                   {userDetails?.isEmailVerified ? (
                     <div className="text-center">
-                      <p>Verified Account</p>
+                      <p>Account Verified </p>
                     </div>
                   ) : (
                     <div className="text-center">
