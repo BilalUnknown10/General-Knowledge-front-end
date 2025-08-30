@@ -12,8 +12,8 @@ function GuideLine() {
   }
   return (
     <div className="mt-20 md:mt-10">
-      <div>
-        <h1 className="font-bold md:text-3xl text-2xl tracking-wider text-center">
+      <div className="border-b">
+        <h1 className="font-bold md:text-3xl text-xl pb-2 ">
           Guidelines for complete registration
         </h1>
       </div>

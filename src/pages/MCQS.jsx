@@ -176,7 +176,7 @@ function MCQS() {
             true ? (
               <div className="py-10 px-10">
                 <h1 className="font-semibold md:text-xl text-green-600 ">
-                  Ohh Correct Answer
+                  Correct Answer
                 </h1>
                 <p className="py-5">
                   Your Answer is ={" "}
@@ -195,7 +195,7 @@ function MCQS() {
             ) : (
               <div className="py-10 px-10">
                 <h1 className="font-semibold md:text-xl text-red-600">
-                  Opps Wrong Answer
+                  Wrong Answer
                 </h1>
                 <p className="py-5">
                   Your Answer is ={" "}

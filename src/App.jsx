@@ -8,6 +8,7 @@ import MainLayout from './MainLayout'
 import Signup from './pages/Signup'
 import MCQS from './pages/MCQS'
 import Verification from './components/Verification'
+import FeedbackForm from './components/FeedbackForm'
 
 
 
@@ -28,6 +29,13 @@ function App() {
         <>
         <Navbar/>
         <MCQS/>
+        </>
+        }/>
+
+        <Route path='/feedback' element = {
+        <>
+        <Navbar/>
+        <FeedbackForm/>
         </>
         }/>
       <Route path='/login' element={<Login/>}/>
