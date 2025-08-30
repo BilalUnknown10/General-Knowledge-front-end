@@ -1,5 +1,5 @@
 import React, { } from 'react';
-import FirstSection from '../components/homePageComponents/firstSection';
+import FirstSection from '../components/homePageComponents/FirstSection';
 import AboutUs from '../components/homePageComponents/AboutUs';
 import GuideLine from '../components/homePageComponents/GuideLine';
 import UserFeedBack from '../components/homePageComponents/UserFeedBack';
