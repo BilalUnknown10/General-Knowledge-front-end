@@ -29,7 +29,7 @@ function Navbar() {
   const logout = async () => {
     localStorage.removeItem("GKT");
     setIsUserLogin(false);
-    toast.success("Logout Successfully")
+    toast.success("Logout Successfully");
   };
 
   // useGSAP(() => {
@@ -50,7 +50,7 @@ function Navbar() {
     setMobileMenu(false);
   };
 
-  useEffect( () => {},[]);
+  useEffect(() => {}, []);
 
   return (
     <>
@@ -132,6 +132,16 @@ function Navbar() {
                     <Link onClick={logout}>
                       <li className="cursor-pointer border-b">Logout</li>
                     </Link>
+                    {userDetails.isAdmin === true && (
+                      <Link to={"/admin/dashboard"}>
+                        <li
+                          onClick={backToHome}
+                          className="cursor-pointer border-b"
+                        >
+                          Admin
+                        </li>
+                      </Link>
+                    )}
                     {userDetails.isEmailVerified === false && (
                       <Link>
                         <li
@@ -182,6 +192,13 @@ function Navbar() {
               <Link to={"/mcqs"}>
                 <li className="cursor-pointer hover:text-blue-800">MCQS</li>
               </Link>
+              {userDetails.isAdmin === true && (
+                <Link to={"/admin/dashboard"}>
+                  <li onClick={backToHome} className="cursor-pointer hover:text-blue-800">
+                    Admin
+                  </li>
+                </Link>
+              )}
             </ul>
           </div>
 
@@ -191,7 +208,10 @@ function Navbar() {
               <>
                 {userDetails.profileImage ? (
                   <div className="flex gap-2 items-center">
-                    <div onClick={() => setEmailVerifyMenu(!emailVerifyMenu)} className="w-16 h-16 rounded-full">
+                    <div
+                      onClick={() => setEmailVerifyMenu(!emailVerifyMenu)}
+                      className="w-16 h-16 rounded-full"
+                    >
                       <img
                         className=" w-full rounded-full cursor-pointer h-full object-cover"
                         src={userDetails?.profileImage}
@@ -237,16 +257,18 @@ function Navbar() {
                 >
                   <div className="text-center">
                     {userDetails.profileImage ? (
-                     <div className="flex flex-col justify-center items-center">
-                       <div className="w-24 h-24 rounded-full relative overflow-hidden">
-                        <img
-                          className=" w-full rounded-full h-full object-cover"
-                          src={userDetails?.profileImage}
-                          alt="profile image"
-                        />
-                      <span className="bg-black bottom-0 w-full left-0 opacity-0 transition-all duration-500 ease-in-out hover:opacity-70 cursor-pointer absolute">Edit</span>
+                      <div className="flex flex-col justify-center items-center">
+                        <div className="w-24 h-24 rounded-full relative overflow-hidden">
+                          <img
+                            className=" w-full rounded-full h-full object-cover"
+                            src={userDetails?.profileImage}
+                            alt="profile image"
+                          />
+                          <span className="bg-black bottom-0 w-full left-0 opacity-0 transition-all duration-500 ease-in-out hover:opacity-70 cursor-pointer absolute">
+                            Edit
+                          </span>
+                        </div>
                       </div>
-                     </div>
                     ) : (
                       <AccountCircleIcon
                         className={`!text-7xl hover:cursor-pointer`}
@@ -264,20 +286,19 @@ function Navbar() {
                       <p>UnVerified Account</p>
                     </div>
                   )}
-                  { userDetails.isEmailVerified !== true && (
+                  {userDetails.isEmailVerified !== true && (
                     <div className="text-center mt-5">
-                    <button
-                      onClick={async () => {
-                        await generateOTP(); // optional if needed
-                        navigate("/verification"); // using useNavigate from react-router
-                      }}
-                      className="border rounded-md px-6 py-2 cursor-pointer transition-all duration-500 ease-in-out hover:border-green-300 shadow-md hover:text-black hover:bg-green-300"
-                    >
-                      Verify Your Account
-                    </button>
-                  </div>
-                  )
-                  }
+                      <button
+                        onClick={async () => {
+                          await generateOTP(); // optional if needed
+                          navigate("/verification"); // using useNavigate from react-router
+                        }}
+                        className="border rounded-md px-6 py-2 cursor-pointer transition-all duration-500 ease-in-out hover:border-green-300 shadow-md hover:text-black hover:bg-green-300"
+                      >
+                        Verify Your Account
+                      </button>
+                    </div>
+                  )}
                 </div>
               </>
             ) : (

@@ -9,6 +9,7 @@ import Signup from './pages/Signup'
 import MCQS from './pages/MCQS'
 import Verification from './components/Verification'
 import FeedbackForm from './components/FeedbackForm'
+import DashboardMain from './pages/dashboard/DashboardMain'
 
 
 
@@ -41,6 +42,7 @@ function App() {
       <Route path='/login' element={<Login/>}/>
       <Route path='/signup' element={<Signup/>}/>
       <Route path='/verification' element={<Verification/>}/>
+      <Route path='/admin/dashboard' element={<DashboardMain/>}/>
     </Routes>
     </BrowserRouter>
     {/* <Footer/> */}
