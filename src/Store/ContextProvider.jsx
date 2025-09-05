@@ -61,6 +61,7 @@ function ContextProvider({ children }) {
         try {
           const response = await axios.get(`${User_Api}/userDetails`, {
             headers: {
+              "Content-Type" : "application/json",
               Authorization: `Bearer ${token}`,
             },
           });
