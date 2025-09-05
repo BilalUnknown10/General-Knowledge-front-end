@@ -52,33 +52,33 @@ function ContextProvider({ children }) {
         }
       };
 
-  useEffect(() => {
-    const token = localStorage.getItem("GKT");
+useEffect(() => {
+  const token = localStorage.getItem("GKT");
 
-    if (token) {
-      setIsUserLogin(true);
-      const userDetail = async (token) => {
-        try {
-          const response = await axios.get(`${User_Api}/userDetails`, {
-            headers: {
-              "Content-Type" : "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          });
+  if (token) {
+    setIsUserLogin(true);
 
-          if (response.status === 200) {
-            setUserDetails(response.data);
-          }
-        } catch (error) {
-          console.log(
-            "error in userDetails function in context provider file",
-            error
-          );
+    const userDetail = async (token) => {
+      try {
+        const response = await axios.get(`${User_Api}/userDetails`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.status === 200) {
+          setUserDetails(response.data);
         }
-      };
-      userDetail(token);
-    }
-  }, [isUserLogin, User_Api]);
+      } catch (error) {
+        console.log("error in userDetails function in context provider file", error);
+      }
+    };
+
+    userDetail(token);
+  }
+}, [isUserLogin, User_Api]);
+
 
   return (
     <UserContext.Provider
