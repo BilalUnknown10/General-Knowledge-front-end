@@ -45,9 +45,11 @@ function Signup() {
       });
       
       if(response.status === 201){
+        console.log("✅ Signup success, redirecting...");
+
         const {message,token} = response.data;
         await savedTokeInLocalStorage(token);
-        
+
         toast.success(message);
 
         setUserName("");
