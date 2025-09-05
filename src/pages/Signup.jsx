@@ -45,11 +45,14 @@ function Signup() {
       });
       
       if(response.status === 201){
-        await savedTokeInLocalStorage(response.data.token)
+        const {message,token} = response.data;
+        await savedTokeInLocalStorage(token);
+        
+        toast.success(message);
+
+        setUserName("");
         setEmail("");
         setPassword("");
-        setUserName("");
-        toast.success(response.data.message);
         navigate('/');
       }
     } catch (error) {
