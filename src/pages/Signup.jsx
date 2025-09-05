@@ -43,6 +43,8 @@ function Signup() {
       const response = await axios.post(`${User_Api}/userRegistration`,{
         userName, email, password
       });
+
+      console.log(response)
       
       if(response.status === 201){
         console.log("✅ Signup success, redirecting...");
