@@ -44,7 +44,7 @@ function Signup() {
         userName, email, password
       });
       
-      if(response.status == 201){
+      if(response.status === 201){
         await savedTokeInLocalStorage(response.data.token)
         setEmail("");
         setPassword("");
