@@ -46,7 +46,6 @@ function Login() {
       if(response.status === 200){
         const {token, message} = response.data
         await savedTokeInLocalStorage(token);
-        console.log(message);
         toast.success(message);
 
         setEmail("");
