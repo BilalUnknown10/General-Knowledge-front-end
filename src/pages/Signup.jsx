@@ -60,7 +60,7 @@ function Signup() {
         navigate('/');
       }
     } catch (error) {
-      // console.log("error in signup component signup function", error.response.data);
+      console.log("error in signup component signup function", error.response.data);
       const responseError = error.response.data;
       if(!userName) return setUserNameError(responseError);
       if(!email) return setEmailError(responseError);
