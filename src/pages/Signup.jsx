@@ -43,15 +43,11 @@ function Signup() {
       const response = await axios.post(`${User_Api}/userRegistration`,{
         userName, email, password
       });
-
-      console.log(response)
       
       if(response.status === 201){
-        console.log("✅ Signup success, redirecting...");
-
         const {message,token} = response.data;
         await savedTokeInLocalStorage(token);
-
+        
         toast.success(message);
 
         setUserName("");
@@ -60,7 +56,7 @@ function Signup() {
         navigate('/');
       }
     } catch (error) {
-      console.log("error in signup component signup function", error.response.data);
+      // console.log("error in signup component signup function", error.response.data);
       const responseError = error.response.data;
       if(!userName) return setUserNameError(responseError);
       if(!email) return setEmailError(responseError);
