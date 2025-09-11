@@ -168,7 +168,7 @@ function MCQS() {
           </ul>
         ) : (
           <div className="h-[30vh] flex justify-center items-center">
-            <p className="font-bold md:text-2xl text-xl">No MCQS Posted</p>
+            <p className="font-bold md:text-2xl text-xl">No MCQS Posted Yet</p>
           </div>
         )}
 
