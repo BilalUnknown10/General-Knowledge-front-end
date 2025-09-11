@@ -17,7 +17,8 @@ function Signup() {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [invalidEmail, setInvalidEmail] = useState("");
-  const [existUser, setExistUser] = useState("")
+  const [existUser, setExistUser] = useState("");
+  const [loading, setLoading] = useState(false)
 
   const navigate = useNavigate();
   const {User_Api, savedTokeInLocalStorage} = useContext(UserContext);
@@ -39,6 +40,7 @@ function Signup() {
   };
 
   const signUp = async () => {
+    setLoading(true);
     try {
       const response = await axios.post(`${User_Api}/userRegistration`,{
         userName, email, password
@@ -67,7 +69,9 @@ function Signup() {
       if(responseError.field === "existUser"){
         setExistUser(responseError.message);
       }
-      toast.error(error.response.data.message)
+      toast.error(error.response.data.message);
+      } finally {
+        setLoading(false);
       }
   };
 
@@ -136,12 +140,21 @@ function Signup() {
           )}
         </div>
         <div className="text-end">
-          <button
+          {/* <button
             onClick={signUp}
             className="bg-green-500 cursor-pointer md:text-xl md:tracking-widest text-white px-8 py-2 rounded transition-all duration-300 w-full hover:bg-green-600"
           >
             Signup
-          </button>
+          </button> */}
+          <button
+  onClick={signUp}
+  disabled={loading}
+  className={`md:text-xl md:tracking-widest text-white px-8 py-2 rounded transition-all duration-300 w-full
+    ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-green-500 hover:bg-green-600 cursor-pointer"}
+  `}
+>
+  {loading ? "Signing up..." : "Signup"}
+</button>
         </div>
         <div className="border-t w-full mt-10 relative">
           <h1 className="absolute left-1/2 -translate-x-1/2 -top-3 bg-white px-2 text-sm text-gray-600">

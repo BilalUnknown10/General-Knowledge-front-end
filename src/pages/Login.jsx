@@ -14,6 +14,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
   const [visiblePass, setVisiblePass] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   
@@ -37,6 +38,7 @@ function Login() {
   };
 
   const Login = async () => {
+    setLoading(true);
     try {
 
       const response = await axios.post(`${User_Api}/userLogin`,{
@@ -56,6 +58,8 @@ function Login() {
       // console.log("error in login component login function",error.response);
       setLoginError(error.response.data);
       toast.error(error.response.data);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -98,9 +102,18 @@ function Login() {
       }
        </div>
         <div className="text-end">
-          <button onClick={Login} className="bg-green-500 cursor-pointer md:text-xl md:tracking-widest text-white px-8 py-2 rounded transition-all duration-300 w-full hover:bg-green-600">
+          {/* <button onClick={Login} className="bg-green-500 cursor-pointer md:text-xl md:tracking-widest text-white px-8 py-2 rounded transition-all duration-300 w-full hover:bg-green-600">
             Login
-          </button>
+          </button> */}
+          <button
+  onClick={Login}
+  disabled={loading}
+  className={`md:text-xl md:tracking-widest text-white px-8 py-2 rounded transition-all duration-300 w-full 
+    ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-green-500 hover:bg-green-600 cursor-pointer"}
+  `}
+>
+  {loading ? "Logging in..." : "Login"}
+</button>
         </div>
         <div className="border-t w-full mt-10 relative">
           <h1 className="absolute left-1/2 -translate-x-1/2 -top-3 bg-white px-2 text-sm text-gray-600">
@@ -109,7 +122,7 @@ function Login() {
         </div>
 
         <div className="mt-8 text-center">
-          <button className="bg-blue-500 cursor-pointer md:text-xl md:tracking-widest text-white px-4 py-2 rounded transition-all duration-300 w-full hover:bg-blue-600">
+          <button disabled className="bg-blue-500 cursor-pointer md:text-xl md:tracking-widest text-white px-4 py-2 rounded transition-all duration-300 w-full hover:bg-blue-600">
             Login with Google
           </button>
         </div>
