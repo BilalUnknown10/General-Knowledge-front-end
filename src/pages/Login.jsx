@@ -4,7 +4,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import UserContext from "../Store/UserContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, replace, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import axios from 'axios';
 import { toast } from "react-toastify";
@@ -63,10 +63,14 @@ function Login() {
     }
   }
 
+  const backToHome = () => {
+    navigate("/",{replace : true});
+  }
+
   return (
     <div className="p-20 flex flex-col items-center h-[100vh] justify-center bg-green-800">
       <div className=" relative border border-gray-500 shadow-md shadow-gray-500 rounded-md md:w-[400px] w-[380px] md:p-10 py-10 px-5 bg-green-50">
-        <Link to={'/'}><ClearIcon className="absolute text-white bg-red-500 top-2 cursor-pointer right-2"/></Link>
+        <div onClick={backToHome}><ClearIcon className="absolute text-white bg-red-500 top-2 cursor-pointer right-2"/></div>
         <h1 className="md:text-3xl text-2xl text-center border-b pb-2 font-bold tracking-widest">
           Login
         </h1>
