@@ -13,7 +13,7 @@ function MCQS() {
   const [allQuestions, setAllQuestions] = useState([]);
   const [submitAnswer, setSubmitAnswer] = useState("");
   const [isMcqsFill, setIsMcqsFill] = useState("");
-  const [completedAllQuestions, setCompletedAllQuestions] = useState(false)
+  const [completedAllQuestions, setCompletedAllQuestions] = useState(false);
   const navigate = useNavigate();
 
   const {
@@ -26,12 +26,11 @@ function MCQS() {
   // next mcqs
   const nextMcqs = (e) => {
     e.preventDefault();
-    if(userDetails?.submittedAnswers[questionNumber]){
+    if (userDetails?.submittedAnswers[questionNumber]) {
       if (questionNumber < allQuestions.length - 1) {
         setQuestionNumber((prev) => prev + 1);
       }
     }
-      
   };
 
   // previous mcqs
@@ -43,7 +42,7 @@ function MCQS() {
 
   const submittedAnswer = async (e) => {
     e.preventDefault();
-    
+
     try {
       const response = await axios.post(
         `${User_Api}/userSubmitAnswer/${allQuestions[questionNumber]._id}`,
@@ -72,12 +71,11 @@ function MCQS() {
     setSubmitAnswer(value);
   };
 
-
   useEffect(() => {
     if (userDetails?.isEmailVerified === false) {
-    toast.warn("Please check guideline section verify your email");
-    navigate('/');
-  }
+      toast.warn("Please check guideline section verify your email");
+      navigate("/");
+    }
 
     if (!loginUserToken) {
       navigate("/login");
@@ -110,8 +108,6 @@ function MCQS() {
 
     getAllQuestions();
   }, [loginUserToken, navigate, User_Api, userDetails]);
-
-  
 
   return (
     <div className="p-5 md:p-10 bg-green-100 h-[90vh] flex justify-center flex-col items-center">
@@ -160,15 +156,21 @@ function MCQS() {
         </div>
       </div>
       <div className="border border-green-500 rounded-b-md h-[48vh] w-full md:w-1/2 md:min-h-1/2  relative overflow-x-hidden">
-        <ul className={`md:px-10 px-5 mt-10`}>
-          <li className=" flex gap-2 font-bold text-xl">
-            {questionNumber + 1}.
-            <p>
-              {allQuestions?.length > 0 &&
-                allQuestions[questionNumber]?.question}
-            </p>
-          </li>
-        </ul>
+        {allQuestions.length > 0 ? (
+          <ul className={`md:px-10 px-5 mt-10`}>
+            <li className=" flex gap-2 font-bold text-xl">
+              {questionNumber + 1}.
+              <p>
+                {allQuestions?.length > 0 &&
+                  allQuestions[questionNumber]?.question}
+              </p>
+            </li>
+          </ul>
+        ) : (
+          <div className="h-[30vh] flex justify-center items-center">
+            <p className="font-bold md:text-2xl text-xl">No MCQS Posted</p>
+          </div>
+        )}
 
         {userDetails?.submittedAnswers?.[questionNumber] ? (
           <div>
@@ -190,7 +192,11 @@ function MCQS() {
                     {allQuestions?.[questionNumber]?.correctAnswer}
                   </strong>
                 </p>
-                {completedAllQuestions && <h1 className="mt-10 font-bold text-green-700">You completed all questions</h1>}
+                {completedAllQuestions && (
+                  <h1 className="mt-10 font-bold text-green-700">
+                    You completed all questions
+                  </h1>
+                )}
               </div>
             ) : (
               <div className="py-10 px-10">
@@ -209,7 +215,11 @@ function MCQS() {
                     {allQuestions?.[questionNumber]?.correctAnswer}
                   </strong>
                 </p>
-                {completedAllQuestions && <h1 className="mt-10 font-bold text-green-700">You completed all questions</h1>}
+                {completedAllQuestions && (
+                  <h1 className="mt-10 font-bold text-green-700">
+                    You completed all questions
+                  </h1>
+                )}
               </div>
             )}
           </div>
@@ -235,14 +245,16 @@ function MCQS() {
                   );
                 })}
             </form>
-            <div className=" text-right m-5">
-              <button
-                onClick={submittedAnswer}
-                className="bg-green-500 px-5 py-2 rounded-md hover:cursor-pointer text-white hover:bg-green-700 transition-all duration-500 ease-in-out border-none"
-              >
-                Move Next
-              </button>
-            </div>
+            {allQuestions.length > 0 && (
+              <div className=" text-right m-5">
+                <button
+                  onClick={submittedAnswer}
+                  className="bg-green-500 px-5 py-2 rounded-md hover:cursor-pointer text-white hover:bg-green-700 transition-all duration-500 ease-in-out border-none"
+                >
+                  Move Next
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
