@@ -10,11 +10,18 @@ import MCQS from './pages/MCQS'
 import Verification from './components/Verification'
 import FeedbackForm from './components/FeedbackForm'
 import DashboardMain from './pages/dashboard/DashboardMain'
+import { useContext } from 'react'
+import UserContext from './Store/UserContext'
+import NotFound from './pages/NotFound'
+
 
 
 
 
 function App() {
+  const {userDetails} = useContext(UserContext);
+
+  console.log(userDetails)
 
   return (
     <>
@@ -42,7 +49,12 @@ function App() {
       <Route path='/login' element={<Login/>}/>
       <Route path='/signup' element={<Signup/>}/>
       <Route path='/verification' element={<Verification/>}/>
+
+      {userDetails.isAdmin === true &&
       <Route path='/admin/dashboard' element={<DashboardMain/>}/>
+      }
+
+      <Route path="*" element={<NotFound />} />
     </Routes>
     </BrowserRouter>
     {/* <Footer/> */}
