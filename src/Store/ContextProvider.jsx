@@ -7,6 +7,7 @@ function ContextProvider({ children }) {
   const [mobileMenu, setMobileMenu] = useState(false);
   const [isUserLogin, setIsUserLogin] = useState(false);
   const [userDetails, setUserDetails] = useState("");
+  const [emailVerification, setEmailVerification] = useState(false);
 
   const Admin_Api = import.meta.env.VITE_ADMIN_API_URI;
   const User_Api = import.meta.env.VITE_USER_API_URI;
@@ -20,6 +21,7 @@ function ContextProvider({ children }) {
 
   // Generate OTP for email verification
   const generateOTP = async () => {
+    setEmailVerification(true);
     try {
       const response = await axios.get(`${User_Api}/userVerificationOTP`, {
         headers: {
@@ -27,9 +29,11 @@ function ContextProvider({ children }) {
         },
       });
 
-      console.log(response);
+      // console.log(response);
     } catch (error) {
       console.log("error in email verification function : ", error);
+    } finally {
+      setEmailVerification(false)
     }
   };
 
@@ -93,7 +97,8 @@ useEffect(() => {
         userDetails,
         loginUserToken,
         generateOTP,
-        refreshUserDetails
+        refreshUserDetails,
+        emailVerification
       }}
     >
       {children}

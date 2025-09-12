@@ -20,6 +20,7 @@ function Navbar() {
     setIsUserLogin,
     userDetails,
     generateOTP,
+    emailVerification
   } = useContext(UserContext);
 
   const openMenu = () => {
@@ -31,20 +32,7 @@ function Navbar() {
     setIsUserLogin(false);
     toast.success("Logout Successfully");
   };
-
-  // useGSAP(() => {
-  //   const navbarTimeline = gsap.timeline();
-  //   navbarTimeline.from(
-  //     [".headingWebName", ".headingWebpages", ".headingWebLogin"],
-  //     {
-  //       y: -50,
-  //       opacity: 0,
-  //       duration: 1,
-  //       ease: "power3.out",
-  //       stagger: 0.5,
-  //     }
-  //   );
-  // }, []);
+ 
 
   const backToHome = () => {
     setMobileMenu(false);
@@ -150,14 +138,23 @@ function Navbar() {
                             navigate("/verification"); // using useNavigate from react-router
                           }}
                           className="cursor-pointer border-b"
+                          disabled = {emailVerification}
                         >
-                          Verify Your Account
+                          {emailVerification ? "Please Wait..." : "Verify Your Account"}
                         </li>
                       </Link>
                     )}
                   </>
                 ) : (
                   <>
+                  <Link to={"/signup"}>
+                      <li
+                        onClick={backToHome}
+                        className="cursor-pointer border-b"
+                      >
+                        Signup
+                      </li>
+                    </Link>
                     <Link to={"/login"}>
                       <li
                         onClick={backToHome}
@@ -166,14 +163,7 @@ function Navbar() {
                         Login
                       </li>
                     </Link>
-                    <Link to={"/signup"}>
-                      <li
-                        onClick={backToHome}
-                        className="cursor-pointer border-b"
-                      >
-                        Signup
-                      </li>
-                    </Link>
+                    
                   </>
                 )}
               </ul>
@@ -292,10 +282,12 @@ function Navbar() {
                         onClick={async () => {
                           await generateOTP(); // optional if needed
                           navigate("/verification"); // using useNavigate from react-router
+                          console.log("clicked verification");
                         }}
                         className="border rounded-md px-6 py-2 cursor-pointer transition-all duration-500 ease-in-out hover:border-green-300 shadow-md hover:text-black hover:bg-green-300"
+                        disabled = {emailVerification}
                       >
-                        Verify Your Account
+                       {emailVerification ? "Please Wait..." : "Verify Your Account"}
                       </button>
                     </div>
                   )}

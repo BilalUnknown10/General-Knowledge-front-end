@@ -1,6 +1,6 @@
 import React from "react";
 
-function Input({type, inputClassName, inputValue, inputId, mainDivClassName, label, placeholder, onChange,name}) {
+function Input({type, inputClassName, inputValue, inputId, mainDivClassName, label, placeholder, onChange,name, disabled}) {
   return (
     <div className={`${mainDivClassName}`}>
       <label className="md:text-2xl" htmlFor={inputId}>{label}</label>
@@ -14,6 +14,7 @@ function Input({type, inputClassName, inputValue, inputId, mainDivClassName, lab
         placeholder={`${placeholder}`}
         onChange={onChange}
         required
+        disabled = {disabled}
       />
     </div>
   );

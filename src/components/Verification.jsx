@@ -13,6 +13,7 @@ function Verification() {
   const [OTPError, setOTPError] = useState("");
   const [minutes, setMinutes] = useState(9);
   const [seconds, setSeconds] = useState(59);
+  const [verifyingOTP, setVerifyingOTP] = useState(false)
 
   const navigate = useNavigate();
 
@@ -27,6 +28,7 @@ function Verification() {
   };
 
   const emailVerification = async () => {
+   setVerifyingOTP(true);
     try {
       const response = await axios.post(
         `${User_Api}/userEmailVerification`,
@@ -48,6 +50,8 @@ function Verification() {
     } catch (error) {
       console.log("error in email verification function : ", error);
        setOTPError(error.response.data.message);
+    } finally {
+      setVerifyingOTP(false);
     }
   };
 
@@ -109,9 +113,10 @@ function Verification() {
             onClick={emailVerification}
             className={`bg-green-500 px-8 rounded-md font-bold md:text-xl text-white py-2 cursor-pointer hover:bg-green-300 hover:text-black ${
               OTP.length === 4 ? "opacity-100" : "opacity-0"
-            }`}
+            } ${verifyingOTP ? "cursor-not-allowed" : "cursor-pointer"}`}
+            disabled = {verifyingOTP}
           >
-            Verify
+            {verifyingOTP ? "Verifying..." : "Verify"}
           </button>
         </div>
       </div>

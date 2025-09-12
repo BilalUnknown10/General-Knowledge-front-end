@@ -21,8 +21,6 @@ import NotFound from './pages/NotFound'
 function App() {
   const {userDetails} = useContext(UserContext);
 
-  console.log(userDetails)
-
   return (
     <>
     {/* <Navbar/> */}
