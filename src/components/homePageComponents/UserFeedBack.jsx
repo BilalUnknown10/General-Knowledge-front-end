@@ -54,9 +54,9 @@ function UserFeedBack() {
         {allFeedbacks.map((feedBack, index) => (
           <SwiperSlide key={index} >
             <div className='border border-green-500 bg-green-300 p-5 rounded-md h-full'>
-              <div className='flex items-center gap-5'>
+              <div className='flex items-center gap-3'>
                 {feedBack.image ? <img className='w-20 h-20 border-2 border-white rounded-full' src={`${feedBack.image}`} alt="userImage" /> :
-                <AccountCircleIcon className={`!text-7xl bg-white rounded-full`}/>
+                <AccountCircleIcon className={`md:!text-7xl !text-5xl bg-green-200 rounded-full`}/>
                 }
                 <h1 className='font-bold md:text-2xl'>{feedBack.name}</h1>
               </div>
