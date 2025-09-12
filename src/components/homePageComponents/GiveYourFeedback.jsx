@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 function GiveYourFeedback() {
   return (
-    <div className="md:mt-40 mt-20">
+    <div className="md:mt-10 mt-10">
       <h1 className="md:text-3xl text-2xl font-bold tracking-wider text-center">
         Give Your Feedback
       </h1>

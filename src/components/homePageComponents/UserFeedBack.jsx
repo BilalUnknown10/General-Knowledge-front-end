@@ -30,6 +30,8 @@ function UserFeedBack() {
     getAllFeedbacks();
   },[]);
   return (
+     <>
+      <GiveYourFeedback/>
     <div className='mt-20'>
       <div className='md:text-3xl text-2xl font-bold text-center mb-8'>
         <h1 className='tracking-wider'>Our Users Feedback</h1>
@@ -65,8 +67,9 @@ function UserFeedBack() {
           </SwiperSlide>
         ))}
       </Swiper>
-      <GiveYourFeedback/>
+      
     </div>
+     </>
   );
 }
 
