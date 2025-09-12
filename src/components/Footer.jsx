@@ -27,7 +27,7 @@ function Footer() {
           <MarkEmailReadIcon/> ourweb.pk@gmail.com
         </div>
         <div className="md:text-xl flex items-center gap-3 mt-5">
-          <PhoneAndroidIcon/> 03409342610
+          <PhoneAndroidIcon/> 0340XXXXXXX
         </div>
         <div className="md:text-xl flex items-center gap-3 mt-5">
           <LinkedInIcon/> Muhammad Bilal
