@@ -23,7 +23,7 @@ function ContextProvider({ children }) {
   const generateOTP = async () => {
     setEmailVerification(true);
     try {
-      const response = await axios.get(`${User_Api}/userVerificationOTP`, {
+       await axios.get(`${User_Api}/userVerificationOTP`, {
         headers: {
           Authorization: `Bearer ${loginUserToken}`,
         },
