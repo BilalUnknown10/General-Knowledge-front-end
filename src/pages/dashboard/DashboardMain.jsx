@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import UserContext from "../../Store/UserContext";
+import { toast } from 'react-toastify';
 
 function DashboardMain() {
   const { Admin_Api, loginUserToken } = useContext(UserContext);
@@ -9,6 +10,7 @@ function DashboardMain() {
     answers: "",
     correctAnswer: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const handleInput = (e) => {
     const {name, value} = e.target;
@@ -22,6 +24,7 @@ function DashboardMain() {
 
   const uploadMcq = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await axios.post(`${Admin_Api}/uploadMCQ`,addMcq,{
         headers : {
@@ -30,10 +33,20 @@ function DashboardMain() {
         }
       });
       console.log(response.data);
+      if(response.status === 200) {
+        toast.success("MCQ Posted");
+        setAddMcq({
+          question : "",
+          answers : "",
+          correctAnswer : ""
+        });
+      }
     } catch (error) {
-      console.log("error in upload mcq file front-end", error);
+      // console.log("error in upload mcq file front-end", error);
+      toast.error(error.response.data.message);
+    } finally {
+      setLoading(false)
     }
-    console.log(addMcq);
   };
   return (
     <div>
@@ -51,7 +64,7 @@ function DashboardMain() {
           Feedbacks
         </button>
       </div>
-      <div className="h-[82.5vh] flex justify-center items-center">
+      <div className="h-[82.5vh] flex justify-center items-center px-2">
         <form action="">
           <div>
             <label htmlFor="mcq" className="font-bold text-2xl text-green-500">
@@ -64,8 +77,7 @@ function DashboardMain() {
                 onChange={handleInput}
                 id="mcq"
                 rows={5}
-                cols={80}
-                className="border border-green-500 rounded-md md:px-10 md:py-5 outline-none"
+                className={`border border-green-500 md:w-[90vh] w-full rounded-md md:px-10 md:py-5 outline-none`}
               ></textarea>
             </div>
           </div>
@@ -75,7 +87,7 @@ function DashboardMain() {
               className="font-bold text-2xl text-green-500"
             >
               Answers :{" "}
-              <span className="font-normal text-xl text-black">
+              <span className="font-normal text-sm text-black">
                 (Enter three or four options separate by ( , ) comma)
               </span>
             </label>
@@ -87,7 +99,7 @@ function DashboardMain() {
                 value={addMcq.answers}
                 onChange={handleInput}
                 placeholder="e.g  wrong, correct, etc,"
-                className="border w-full rounded-md border-green-500 md:px-10 md:py-5 outline-none"
+                className="border w-full rounded-md border-green-500 md:px-10 px-5 md:py-5 py-3 outline-none"
               />
             </div>
           </div>
@@ -97,7 +109,7 @@ function DashboardMain() {
               className="font-bold text-2xl text-green-500"
             >
               Correct Answer :{" "}
-              <span className="font-normal text-xl text-black">
+              <span className="font-normal text-sm text-black">
                 (Enter the correct one from answers)
               </span>
             </label>
@@ -107,17 +119,19 @@ function DashboardMain() {
                 id="correctAnswer"
                 name="correctAnswer"
                 value={addMcq.correctAnswer}
+                placeholder="Enter correct answer"
                 onChange={handleInput}
-                className="border w-full rounded-md border-green-500 md:px-10 md:py-5 outline-none"
+                className="border w-full rounded-md border-green-500 md:px-10 px-5 md:py-5 py-3 outline-none"
               />
             </div>
           </div>
           <div className="text-end mt-10">
             <button
               onClick={uploadMcq}
+              disabled = {loading}
               className="px-10 bg-green-500 text-white py-2 rounded-md md:text-xl cursor-pointer hover:bg-green-600 transition-all duration-300 ease-in-out"
             >
-              Add New Question
+              {loading ? "Please wait" : "Post New Question"}
             </button>
           </div>
         </form>
