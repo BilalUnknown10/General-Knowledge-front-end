@@ -119,7 +119,7 @@ function MCQS() {
     <div className=" relative p-5 md:p-10 bg-green-100 h-[90vh] flex justify-center flex-col items-center">
       {userDetails?.submittedAnswers?.length === allQuestions?.length && (
         <div>
-        <button onClick={downloadMcqs} className="text-xl bg-green-500 px-10 py-2 text-white font-bold rounded-md absolute md:top-10 bottom-0 right-10 cursor-pointer">Download All MCQS</button>
+        <button onClick={downloadMcqs} className="text-xl bg-green-500 px-10 py-2 text-white font-bold rounded-md absolute md:top-10 bottom-30 right-10 cursor-pointer">Download All MCQS</button>
        </div>
       )}
       <div className="flex items-center justify-between  relative text-white p-5 bg-green-500 w-full md:w-1/2 rounded-t-md">
