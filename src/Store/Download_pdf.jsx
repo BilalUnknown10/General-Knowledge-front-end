@@ -1,7 +1,7 @@
 import { jsPDF } from "jspdf";
 
 const handleDownloadPdf = (mcqs) => {
-    console.log(mcqs);
+
   const doc = new jsPDF();
   doc.setFontSize(12);
 
@@ -25,7 +25,7 @@ const handleDownloadPdf = (mcqs) => {
 
     // Correct Answer
     doc.text(`Answer: ${mcq.correctAnswer}`, 15, y);
-    y += 10; // extra spacing before next question
+    y += 20; // extra spacing before next question
   });
 
   doc.save("mcqs.pdf");
