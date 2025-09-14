@@ -98,7 +98,7 @@ useEffect(() => {
         loginUserToken,
         generateOTP,
         refreshUserDetails,
-        emailVerification
+        emailVerification,
       }}
     >
       {children}

@@ -5,6 +5,7 @@ import UserContext from "../Store/UserContext.js";
 import { Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { handleDownloadPdf } from "../Store/Download_pdf.jsx";
 
 function MCQS() {
   const [nextTooltip, setNextToolTip] = useState(false);
@@ -22,6 +23,7 @@ function MCQS() {
     User_Api,
     refreshUserDetails,
   } = useContext(UserContext);
+  
 
   // next mcqs
   const nextMcqs = (e) => {
@@ -71,6 +73,10 @@ function MCQS() {
     setSubmitAnswer(value);
   };
 
+  const downloadMcqs = () => {
+    handleDownloadPdf(allQuestions);
+  }
+
   useEffect(() => {
     if (userDetails?.isEmailVerified === false) {
       toast.warn("Please check guideline section verify your email");
@@ -110,7 +116,12 @@ function MCQS() {
   }, [loginUserToken, navigate, User_Api, userDetails]);
 
   return (
-    <div className="p-5 md:p-10 bg-green-100 h-[90vh] flex justify-center flex-col items-center">
+    <div className=" relative p-5 md:p-10 bg-green-100 h-[90vh] flex justify-center flex-col items-center">
+      {userDetails?.submittedAnswers?.length === allQuestions?.length && (
+        <div>
+        <button onClick={downloadMcqs} className="text-xl bg-green-500 px-10 py-2 text-white font-bold rounded-md absolute top-10 right-10 cursor-pointer">Download All MCQS</button>
+       </div>
+      )}
       <div className="flex items-center justify-between  relative text-white p-5 bg-green-500 w-full md:w-1/2 rounded-t-md">
         <h1 className="text-2xl font-bold">Question</h1>
         <div className="flex items-center gap-5 ">
@@ -156,7 +167,7 @@ function MCQS() {
         </div>
       </div>
       <div className="border border-green-500 rounded-b-md h-[48vh] w-full md:w-1/2 md:min-h-1/2  relative overflow-x-hidden">
-        {allQuestions.length > 0 ? (
+        {allQuestions.length > 0 ?
           <ul className={`md:px-10 px-5 mt-10`}>
             <li className=" flex gap-2 font-bold text-xl">
               {questionNumber + 1}.
@@ -166,12 +177,14 @@ function MCQS() {
               </p>
             </li>
           </ul>
-        ) : (
+         :
           <div className="h-[30vh] flex justify-center items-center">
             <p className="font-bold md:text-2xl text-xl">No MCQS Posted Yet</p>
           </div>
-        )}
+        }
 
+        {allQuestions.length > 0 ?
+        <>
         {userDetails?.submittedAnswers?.[questionNumber] ? (
           <div>
             {userDetails?.submittedAnswers?.[questionNumber]?.status ===
@@ -256,8 +269,8 @@ function MCQS() {
               </div>
             )}
           </div>
-        )}
-      </div>
+        )}</> : ""}
+      </div> 
     </div>
   );
 }
