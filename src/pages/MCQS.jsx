@@ -14,6 +14,7 @@ function MCQS() {
   const [allQuestions, setAllQuestions] = useState([]);
   const [submitAnswer, setSubmitAnswer] = useState("");
   const [isMcqsFill, setIsMcqsFill] = useState("");
+  const [submitAnswerLoading, setSubmitAnswerLoading] = useState(false);
   const [completedAllQuestions, setCompletedAllQuestions] = useState(false);
   const navigate = useNavigate();
 
@@ -44,6 +45,7 @@ function MCQS() {
 
   const submittedAnswer = async (e) => {
     e.preventDefault();
+    setSubmitAnswerLoading(true);
 
     try {
       const response = await axios.post(
@@ -65,6 +67,8 @@ function MCQS() {
       }
     } catch (error) {
       setIsMcqsFill(error.response.data.message);
+    } finally {
+      setSubmitAnswerLoading(false);
     }
   };
 
@@ -97,27 +101,30 @@ function MCQS() {
         setAllQuestions(response.data);
 
         if (allQuestions?.length > userDetails?.submittedAnswers?.length) {
-          // const convertToNumber = Number(allQuestions?.length - 1);
           const convertToNumber = Number(userDetails?.submittedAnswers?.length);
-          setQuestionNumber(convertToNumber);
+          setQuestionNumber(userDetails.submittedAnswers.length);
+          console.log("mcq if part convert to number : ", convertToNumber);
+          console.log("length : ",typeof(userDetails.submittedAnswers.length))
         } else {
           const convertToNumber = Number(
             userDetails?.submittedAnswers?.length - 1 || 0
           );
+          console.log("mcq else part convert to number : ", convertToNumber)
           setQuestionNumber(convertToNumber);
           setCompletedAllQuestions(true);
         }
       } catch (error) {
         console.log("Error in getting all mcqs function : ", error);
       }
-    };
 
+    };
+    
     getAllQuestions();
-  }, [loginUserToken, navigate, User_Api, userDetails]);
+  }, [loginUserToken, navigate, User_Api, userDetails, allQuestions]);
 
   return (
     <div className=" relative p-5 md:p-10 bg-green-100 h-[90vh] flex justify-center flex-col items-center">
-      {userDetails?.submittedAnswers?.length === allQuestions?.length && (
+      {userDetails?.submittedAnswers?.length === allQuestions?.length && allQuestions.length !== 0 && (
         <div>
         <button onClick={downloadMcqs} className="text-xl bg-green-500 px-10 py-2 text-white font-bold rounded-md absolute md:top-10 md:bottom-auto bottom-18 right-5 md:right-10 cursor-pointer">Download All MCQS</button>
        </div>
@@ -262,9 +269,10 @@ function MCQS() {
               <div className=" text-right m-5">
                 <button
                   onClick={submittedAnswer}
-                  className="bg-green-500 px-5 py-2 rounded-md hover:cursor-pointer text-white hover:bg-green-700 transition-all duration-500 ease-in-out border-none"
+                  disabled = {submitAnswerLoading}
+                  className={`bg-green-500 px-5 py-2 rounded-md text-white hover:bg-green-700 transition-all duration-500 ease-in-out border-none ${submitAnswerLoading ? "hover:cursor-not-allowed" : "hover:cursor-pointer"}`}
                 >
-                  Move Next
+                  {submitAnswerLoading ? "Wait..." : "Submit"}
                 </button>
               </div>
             )}
