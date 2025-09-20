@@ -86,7 +86,7 @@ function MCQS() {
   return (
     <div className="h-[90vh] flex flex-col justify-center items-center">
       {/* MCQ'S header section */}
-      <div className="bg-green-500 rounded-t-xl md:w-1/2 px-5 py-2 flex justify-between items-center ">
+      <div className="bg-green-500 rounded-t-xl md:w-1/2 w-[90vw] px-5 py-2 flex justify-between items-center ">
         <div className="md:text-3xl font-bold text-white">
           <h1>Question</h1>
         </div>
@@ -103,7 +103,7 @@ function MCQS() {
       </div>
 
       {/* MCQ'S section */}
-      <div className="border border-green-500 overflow-y-auto h-[50vh] w-1/2 rounded-b-xl">
+      <div className="border border-green-500 overflow-y-auto h-[50vh] md:w-1/2 w-[90vw] rounded-b-xl">
         {allQuestions.length < 1 ? (
           <div className="h-[45vh] flex justify-center items-center font-bold text-2xl">
             <p>No MCQ'S Posted Yet</p>
