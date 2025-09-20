@@ -3,7 +3,7 @@ import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 import axios from "axios";
 import UserContext from "../Store/UserContext";
 import { toast } from "react-toastify";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 function MCQS() {
   const [allQuestions, setAllQuestions] = useState([]);
@@ -23,7 +23,11 @@ function MCQS() {
   };
 
   const nextQuestion = () => {
-    if (questionNumber < allQuestions?.length - 1) {
+    console.log("Clicked");
+    if (
+      questionNumber < userDetails?.submittedAnswers?.length &&
+      questionNumber < allQuestions?.length - 1
+    ) {
       setQuestionNumber((prev) => prev + 1);
     }
   };
@@ -58,13 +62,13 @@ function MCQS() {
   };
 
   useEffect(() => {
-    if(!token) {
+    if (!token) {
       navigate("/login");
     }
-  if(token && userDetails?.isEmailVerified === false){
-    navigate('/');
-    toast.warn("Please Verify Your Email");
-  }
+    if (token && userDetails?.isEmailVerified === false) {
+      navigate("/");
+      toast.warn("Please Verify Your Email");
+    }
 
     const getAllQuestions = async () => {
       try {
@@ -79,8 +83,7 @@ function MCQS() {
         console.log("error in get all mcq's : ", error);
       }
     };
-    
-  
+
     getAllQuestions();
 
     if (userDetails?.submittedAnswers?.length > 0) {
@@ -172,51 +175,74 @@ function MCQS() {
                   <div className="md:p-10">
                     {userDetails?.submittedAnswers?.[questionNumber]?.status ===
                     true ? (
-                      <div className="md:mt-20  mt-10 font-bold text-xl">
-                        <h1 className="text-green-500 mb-5 text-2xl">
-                          <>Correct ✅</>
-                        </h1>
-                        <p>
-                          Your Answer :{" "}
-                          <strong className="text-green-500">
-                            {
-                              userDetails?.submittedAnswers?.[questionNumber]
-                                ?.answer
-                            }
-                          </strong>
-                        </p>
-                        <p>
-                          Correct Answer :{" "}
-                          <strong className="text-green-500">
-                            {allQuestions[questionNumber]?.correctAnswer}
-                          </strong>
-                        </p>
-                      </div>
+                      <>
+                        <div className="md:mt-8 mt-20 font-bold text-xl">
+                          <h1 className="text-green-500 mb-5 text-2xl">
+                            <>Correct ✅</>
+                          </h1>
+                          <p>
+                            Your Answer :{" "}
+                            <strong className="text-green-500">
+                              {
+                                userDetails?.submittedAnswers?.[questionNumber]
+                                  ?.answer
+                              }
+                            </strong>
+                          </p>
+                          <p>
+                            Correct Answer :{" "}
+                            <strong className="text-green-500">
+                              {allQuestions[questionNumber]?.correctAnswer}
+                            </strong>
+                          </p>
+                        </div>
+                        {questionNumber !== allQuestions?.length - 1 && (
+                          <div className="text-end self-end mt-10 flex justify-end gap-5">
+                             <button
+                              onClick={nextQuestion}
+                              className={`px-10 py-1 rounded-md bg-green-500 font-semibold text-white text-xl `}
+                            >
+                              Next
+                            </button>
+                          </div>
+                        )}
+                      </>
                     ) : (
-                      <div className="mt-20 font-bold text-xl">
-                        <h1 className="text-red-500 mb-5">Wrong ❌</h1>
-                        <p>
-                          Your Answer :{" "}
-                          <strong className="text-red-500">
-                            {
-                              userDetails?.submittedAnswers?.[questionNumber]
-                                ?.answer
-                            }
-                          </strong>
-                        </p>
-                        <p>
-                          Correct Answer :{" "}
-                          <strong className="text-green-500">
-                            {allQuestions[questionNumber]?.correctAnswer}
-                          </strong>
-                        </p>
-                      </div>
+                      <>
+                        <div className="md:mt-8 mt-20 font-bold text-xl">
+                          <h1 className="text-red-500 mb-5">Wrong ❌</h1>
+                          <p>
+                            Your Answer :{" "}
+                            <strong className="text-red-500">
+                              {
+                                userDetails?.submittedAnswers?.[questionNumber]
+                                  ?.answer
+                              }
+                            </strong>
+                          </p>
+                          <p>
+                            Correct Answer :{" "}
+                            <strong className="text-green-500">
+                              {allQuestions[questionNumber]?.correctAnswer}
+                            </strong>
+                          </p>
+                        </div>
+                        {questionNumber !== allQuestions?.length - 1 && (
+                          <div className="text-end self-end mt-10 flex justify-end">
+                            <button
+                              onClick={nextQuestion}
+                              className={`px-10 py-1 rounded-md bg-green-500 font-semibold text-white text-xl `}
+                            >
+                              Next
+                            </button>
+                          </div>
+                        )}
+                      </>
                     )}
                   </div>
                 )}
               </div>
             </>
-            {/* ) } */}
           </>
         )}
       </div>
