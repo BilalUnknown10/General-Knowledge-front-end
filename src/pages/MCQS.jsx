@@ -4,6 +4,7 @@ import axios from "axios";
 import UserContext from "../Store/UserContext";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { handleDownloadPdf } from "../Store/Download_pdf";
 
 function MCQS() {
   const [allQuestions, setAllQuestions] = useState([]);
@@ -16,12 +17,14 @@ function MCQS() {
 
   const { User_Api, userDetails, refreshUserDetails } = useContext(UserContext);
 
+  // Previous question...
   const prevQuestion = () => {
     if (questionNumber > 0) {
       setQuestionNumber((prev) => prev - 1);
     }
   };
 
+  // Next question...
   const nextQuestion = () => {
     console.log("Clicked");
     if (
@@ -32,6 +35,7 @@ function MCQS() {
     }
   };
 
+  // Submit answer API..
   const submitQuestion = async (id) => {
     setSubmitLoading(true);
     try {
@@ -60,6 +64,11 @@ function MCQS() {
       setSubmitLoading(false);
     }
   };
+
+  // Download all question function...
+  const handleDownloadMCQS = () => {
+    handleDownloadPdf(allQuestions)
+  }
 
   useEffect(() => {
     if (!token) {
@@ -198,9 +207,9 @@ function MCQS() {
                         </div>
                         {questionNumber !== allQuestions?.length - 1 && (
                           <div className="text-end self-end mt-10 flex justify-end gap-5">
-                             <button
+                            <button
                               onClick={nextQuestion}
-                              className={`px-10 py-1 rounded-md bg-green-500 font-semibold text-white text-xl `}
+                              className={`px-10 py-1 rounded-md cursor-pointer bg-green-500 font-semibold text-white text-xl `}
                             >
                               Next
                             </button>
@@ -231,7 +240,7 @@ function MCQS() {
                           <div className="text-end self-end mt-10 flex justify-end">
                             <button
                               onClick={nextQuestion}
-                              className={`px-10 py-1 rounded-md bg-green-500 font-semibold text-white text-xl `}
+                              className={`px-10 py-1 rounded-md bg-green-500 font-semibold text-white text-xl cursor-pointer `}
                             >
                               Next
                             </button>
@@ -243,6 +252,13 @@ function MCQS() {
                 )}
               </div>
             </>
+            {questionNumber === allQuestions?.length - 1 && (
+              <div className=" text-end px-10 ">
+              <button onClick={handleDownloadMCQS} className="bg-green-400 text-white font-bold px-6 py-1 rounded-md cursor-pointer">
+                Download All MCQ'S
+              </button>
+            </div>
+            )}
           </>
         )}
       </div>
