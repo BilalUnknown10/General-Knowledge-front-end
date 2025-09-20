@@ -61,9 +61,9 @@ function MCQS() {
     if(!token) {
       navigate("/login");
     }
-  if(token && !userDetails?.isEmailVerified){
+  if(token && userDetails?.isEmailVerified === false){
     navigate('/');
-    toast.warn("Please Verify Your");
+    toast.warn("Please Verify Your Email");
   }
 
     const getAllQuestions = async () => {
