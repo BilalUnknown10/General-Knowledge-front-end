@@ -44,9 +44,6 @@ function MCQS() {
 
       console.log(response);
       if (response.status === 200) {
-        // if (questionNumber < allQuestions?.length - 1) {
-        //   setQuestionNumber((prev) => prev + 1);
-        // }
         setSubmitAnswer("");
         refreshUserDetails(token);
       }
@@ -87,7 +84,7 @@ function MCQS() {
     <div className="h-[90vh] flex flex-col justify-center items-center">
       {/* MCQ'S header section */}
       <div className="bg-green-500 rounded-t-xl md:w-1/2 w-[90vw] px-5 py-2 flex justify-between items-center ">
-        <div className="md:text-3xl font-bold text-white">
+        <div className="md:text-3xl text-xl font-bold text-white">
           <h1>Question</h1>
         </div>
         <div className="flex gap-5">
@@ -110,7 +107,6 @@ function MCQS() {
           </div>
         ) : (
           <>
-            {/* {allQuestions?.length !== userDetails?.submittedAnswers?.length &&( */}
             <>
               {/* Question */}
               <div className="p-10 flex flex-col">
