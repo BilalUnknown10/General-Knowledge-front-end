@@ -58,12 +58,14 @@ function MCQS() {
   };
 
   useEffect(() => {
-    if(!userDetails?.isEmailVerified){
-      toast.warn("Please Verify Your Email");
-    }
     if(!token) {
       navigate("/login");
     }
+  if(token && !userDetails?.isEmailVerified){
+    navigate('/');
+    toast.warn("Please Verify Your");
+  }
+
     const getAllQuestions = async () => {
       try {
         const response = await axios.get(`${User_Api}/getAllQuestions`, {
@@ -77,7 +79,8 @@ function MCQS() {
         console.log("error in get all mcq's : ", error);
       }
     };
-
+    
+  
     getAllQuestions();
 
     if (userDetails?.submittedAnswers?.length > 0) {
