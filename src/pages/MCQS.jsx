@@ -44,11 +44,11 @@ function MCQS() {
 
       console.log(response);
       if (response.status === 200) {
-        if (questionNumber < allQuestions?.length - 1) {
-          setQuestionNumber((prev) => prev + 1);
-        }
-        refreshUserDetails(token);
+        // if (questionNumber < allQuestions?.length - 1) {
+        //   setQuestionNumber((prev) => prev + 1);
+        // }
         setSubmitAnswer("");
+        refreshUserDetails(token);
       }
     } catch (error) {
       console.log("error in submit question function : ", error);
