@@ -3,6 +3,7 @@ import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 import axios from "axios";
 import UserContext from "../Store/UserContext";
 import { toast } from "react-toastify";
+import { useNavigate } from 'react-router-dom';
 
 function MCQS() {
   const [allQuestions, setAllQuestions] = useState([]);
@@ -10,6 +11,8 @@ function MCQS() {
   const [submitAnswer, setSubmitAnswer] = useState("");
   const [submitLoading, setSubmitLoading] = useState(false);
   const token = localStorage.getItem("GKT");
+
+  const navigate = useNavigate();
 
   const { User_Api, userDetails, refreshUserDetails } = useContext(UserContext);
 
@@ -55,6 +58,12 @@ function MCQS() {
   };
 
   useEffect(() => {
+    if(!userDetails?.isEmailVerified){
+      toast.warn("Please Verify Your Email");
+    }
+    if(!token) {
+      navigate("/login");
+    }
     const getAllQuestions = async () => {
       try {
         const response = await axios.get(`${User_Api}/getAllQuestions`, {
