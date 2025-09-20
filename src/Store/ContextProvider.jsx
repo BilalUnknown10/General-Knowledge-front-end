@@ -73,7 +73,6 @@ useEffect(() => {
 
         if (response.status === 200) {
           setUserDetails(response.data);
-          console.log(response.data?.email)
         }
       } catch (error) {
         console.log("error in userDetails function in context provider file", error);
