@@ -161,10 +161,10 @@ function MCQS() {
                     </div>
                   </>
                 ) : (
-                  <div className="p-10">
+                  <div className="md:p-10">
                     {userDetails?.submittedAnswers?.[questionNumber]?.status ===
                     true ? (
-                      <div className="mt-20 font-bold text-xl">
+                      <div className="md:mt-20  mt-10 font-bold text-xl">
                         <h1 className="text-green-500 mb-5 text-2xl">
                           <>Correct ✅</>
                         </h1>
