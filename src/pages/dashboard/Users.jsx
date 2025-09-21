@@ -110,9 +110,12 @@ const deleteUser = async (id) => {
             <button className="bg-green-600 text-white px-3 py-1 cursor-pointer rounded-md border-none">
               Update
             </button>{" "}
-            <button onClick={() => deleteUser(user._id)} className="bg-red-600 text-white px-3 py-1 cursor-pointer rounded-md border-none">
+            <button onClick={() => deleteUser(user._id)} className="bg-red-600 text-white px-3 py-1 mx-5 cursor-pointer rounded-md border-none">
               Delete
             </button>
+            {/* <button className="bg-green-600 text-white px-3 py-1 cursor-pointer rounded-md border-none">
+              {user.isAdmin ? "User" : "Admin"}
+            </button> */}
           </p>
         </div>
       ))}
