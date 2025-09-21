@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useContext, useState } from "react";
 import UserContext from "../../Store/UserContext";
 import { toast } from 'react-toastify';
+import {Link} from 'react-router-dom'
 
 function DashboardMain() {
   const { Admin_Api, loginUserToken } = useContext(UserContext);
@@ -54,15 +55,15 @@ function DashboardMain() {
         <h1>General Knowledge</h1>
       </div>
       <div className="my-5 px-10 font-bold flex flex-wrap gap-5">
-        <button className="bg-green-500 px-5 py-1 rounded-md md:text-2xl cursor-pointer hover:bg-green-600 text-white">
+        <Link to = {'/admin/users'} className="bg-green-500 px-5 py-1 rounded-md md:text-2xl cursor-pointer hover:bg-green-600 text-white">
           Users
-        </button>
-        <button className="bg-green-500 px-5 py-1 rounded-md md:text-2xl cursor-pointer hover:bg-green-600 text-white">
+        </Link>
+        <Link to = {'/admin/mcqs'} className="bg-green-500 px-5 py-1 rounded-md md:text-2xl cursor-pointer hover:bg-green-600 text-white">
           MCQS
-        </button>
-        <button className="bg-green-500 px-5 py-1 rounded-md md:text-2xl cursor-pointer hover:bg-green-600 text-white">
+        </Link>
+        <Link to={'/admin/feedbacks'} className="bg-green-500 px-5 py-1 rounded-md md:text-2xl cursor-pointer hover:bg-green-600 text-white">
           Feedbacks
-        </button>
+        </Link>
       </div>
       <div className="h-[82.5vh] flex justify-center items-center px-2">
         <form action="">
