@@ -15,6 +15,7 @@ import UserContext from "./Store/UserContext";
 import NotFound from "./pages/NotFound";
 import Users from "./pages/dashboard/Users";
 import All_MCQS from "./pages/dashboard/All_MCQS";
+import All_Feedbacks from "./pages/dashboard/All_Feedbacks";
 
 function App() {
   const { userDetails } = useContext(UserContext);
@@ -61,6 +62,7 @@ function App() {
               <Route path="dashboard" element={<DashboardMain />} />
               <Route path="users" element={<Users />} />
               <Route path="mcqs" element={<All_MCQS/>}/>
+              <Route path="feedbacks" element={<All_Feedbacks/>}/>
             </Route>
           )}
 

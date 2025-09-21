@@ -4,6 +4,7 @@ import { useContext } from "react";
 import { useState } from "react";
 import UserContext from "../../Store/UserContext";
 import { useEffect } from "react";
+import { toast } from 'react-toastify';
 
 function Users() {
   const [allUsers, setAllUsers] = useState([]);
@@ -11,6 +12,45 @@ function Users() {
 
   const { Admin_Api } = useContext(UserContext);
 
+  // // Get all users
+  // const getAllUsers = async () => {
+  //   try {
+  //     const response = await axios.get(`${Admin_Api}/allUsers`, {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+  //     // console.log(response.data);
+  //     const users = response.data.getAllUsers;
+  //     setAllUsers(users);
+  //   } catch (error) {
+  //     console.log("Error in get all user in dashboard : ", error);
+  //   }
+  // };
+
+// Delete user by id
+const deleteUser = async (id) => {
+  try {
+    const response = await axios.delete(`${Admin_Api}/deleteUserById/${id}`,{
+      headers : {
+        "Content-Type" : "application/json",
+        Authorization : `Bearer ${token}`
+      }
+    });
+
+    console.log(response.data);
+    if(response.status === 200) {
+      toast.success(response.data.message);
+    }
+  } catch (error) {
+    console.log("Error in delete user : ", error);
+  }
+}
+
+  useEffect(() => {
+    if (token) {
+       // Get all users
   const getAllUsers = async () => {
     try {
       const response = await axios.get(`${Admin_Api}/allUsers`, {
@@ -26,14 +66,11 @@ function Users() {
       console.log("Error in get all user in dashboard : ", error);
     }
   };
-
-  console.log(allUsers);
-
-  useEffect(() => {
-    if (token) {
       getAllUsers();
     }
-  }, []);
+
+    console.log("dashboard user useEffect....");
+  }, [token]);
   return (
     <div>
       <div className="py-3 px-10 bg-green-500 font-bold md:text-4xl text-white">
@@ -45,6 +82,7 @@ function Users() {
         <h1 className=" w-1/4 ">Name</h1>
         <h1 className=" w-1/4">Email</h1>
         <h1 className=" w-1/4">Verification</h1>
+        <h1 className=" w-1/4">Status</h1>
         <h1 className="w-1/4 ">Manage Users</h1>
       </div>
       {allUsers.map((user, i) => (
@@ -62,10 +100,17 @@ function Users() {
             )}
           </p>
           <p className=" w-1/4">
+          {user?.isAdmin ? (
+             <span>Admin</span>
+          ): (
+             <span>User</span>
+          )}
+          </p>
+          <p className=" w-1/4">
             <button className="bg-green-600 text-white px-3 py-1 cursor-pointer rounded-md border-none">
               Update
             </button>{" "}
-            <button className="bg-red-600 text-white px-3 py-1 cursor-pointer rounded-md border-none">
+            <button onClick={() => deleteUser(user._id)} className="bg-red-600 text-white px-3 py-1 cursor-pointer rounded-md border-none">
               Delete
             </button>
           </p>
@@ -89,6 +134,13 @@ function Users() {
             ) : (
               <span className="text-red-600">UnVerified</span>
             )}
+          </p>
+          <p className="">
+          Status : {user?.isAdmin ? (
+             <span>Admin</span>
+          ): (
+             <span>User</span>
+          )}
           </p>
           <p className="text-end">
             <button className="bg-green-600 text-white px-3 py-1 cursor-pointer rounded-md border-none">

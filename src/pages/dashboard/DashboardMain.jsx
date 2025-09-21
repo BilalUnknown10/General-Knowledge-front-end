@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import UserContext from "../../Store/UserContext";
-import { toast } from 'react-toastify';
-import {Link} from 'react-router-dom'
+import { toast } from "react-toastify";
+import Admin_Navbar from "./Admin_Navbar";
 
 function DashboardMain() {
   const { Admin_Api, loginUserToken } = useContext(UserContext);
@@ -14,39 +14,37 @@ function DashboardMain() {
   const [loading, setLoading] = useState(false);
 
   const handleInput = (e) => {
-    const {name, value} = e.target;
-    setAddMcq((prev)=> (
-        {
-            ...prev,
-            [name] : value
-        }
-    ))
-  }
+    const { name, value } = e.target;
+    setAddMcq((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   const uploadMcq = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(`${Admin_Api}/uploadMCQ`,addMcq,{
-        headers : {
-            "Content-Type" : "Application/json",
-            Authorization : `Bearer ${loginUserToken}`
-        }
+      const response = await axios.post(`${Admin_Api}/uploadMCQ`, addMcq, {
+        headers: {
+          "Content-Type": "Application/json",
+          Authorization: `Bearer ${loginUserToken}`,
+        },
       });
       console.log(response.data);
-      if(response.status === 200) {
+      if (response.status === 200) {
         toast.success("MCQ Posted");
         setAddMcq({
-          question : "",
-          answers : "",
-          correctAnswer : ""
+          question: "",
+          answers: "",
+          correctAnswer: "",
         });
       }
     } catch (error) {
       // console.log("error in upload mcq file front-end", error);
       toast.error(error.response.data.message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
   return (
@@ -54,7 +52,7 @@ function DashboardMain() {
       <div className="py-3 px-10 bg-green-500 font-bold md:text-4xl text-white">
         <h1>General Knowledge</h1>
       </div>
-      <div className="my-5 px-10 font-bold flex flex-wrap gap-5">
+      {/* <div className="my-5 px-10 font-bold flex flex-wrap gap-5">
         <Link to = {'/admin/users'} className="bg-green-500 px-5 py-1 rounded-md md:text-2xl cursor-pointer hover:bg-green-600 text-white">
           Users
         </Link>
@@ -64,7 +62,8 @@ function DashboardMain() {
         <Link to={'/admin/feedbacks'} className="bg-green-500 px-5 py-1 rounded-md md:text-2xl cursor-pointer hover:bg-green-600 text-white">
           Feedbacks
         </Link>
-      </div>
+      </div> */}
+      <Admin_Navbar />
       <div className="h-[82.5vh] flex justify-center items-center px-2">
         <form action="">
           <div>
@@ -129,7 +128,7 @@ function DashboardMain() {
           <div className="text-end mt-10">
             <button
               onClick={uploadMcq}
-              disabled = {loading}
+              disabled={loading}
               className="px-10 bg-green-500 text-white py-2 rounded-md md:text-xl cursor-pointer hover:bg-green-600 transition-all duration-300 ease-in-out"
             >
               {loading ? "Please wait" : "Post New Question"}

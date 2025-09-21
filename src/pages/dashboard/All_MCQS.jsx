@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import UserContext from "../../Store/UserContext";
+import { toast } from "react-toastify";
 
 function All_MCQS() {
   const [allMCQS, setAllMCQS] = useState([]);
@@ -26,6 +27,36 @@ function All_MCQS() {
     }
   };
 
+  const deleteAllMCQS = async () => {
+    try {
+      const response = await axios.delete(`${Admin_Api}/deleteAllMCQS`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // console.log(response.data);
+      toast.success(response.data.message);
+    } catch (error) {
+      console.log("error in delete all mcqs : ", error);
+    }
+  };
+
+  const deleteAllAnswers = async () => {
+    try {
+      const response = await axios.delete(`${Admin_Api}/deleteAllAnswers`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // console.log(response.data);
+      toast.success(response.data.message);
+    } catch (error) {
+      console.log("error in delete all answers : ", error);
+    }
+  };
+
   useEffect(() => {
     getAllMCQS();
   }, []);
@@ -35,23 +66,39 @@ function All_MCQS() {
         <h1>All MCQ'S</h1>
       </div>
 
-      <div className="my-10 px-10 text-end">
-        <button className="bg-red-500 text-xl font-bold cursor-pointer text-white px-10 py-2 rounded-md">
+      <div className="my-10 px-10 flex justify-end gap-5">
+        <button
+          onClick={deleteAllMCQS}
+          className="bg-red-500 text-xl font-bold cursor-pointer text-white px-10 py-2 rounded-md"
+        >
           Delete All MCQ'S
+        </button>
+        <button
+          onClick={deleteAllAnswers}
+          className="bg-red-500 text-xl font-bold cursor-pointer text-white px-10 py-2 rounded-md"
+        >
+          Delete All Answers
         </button>
       </div>
 
-      {allMCQS.map((question,i) => (
-        <div key={i} className="border border-green-500 m-5 rounded-md py-5 px-10">
+      {allMCQS.map((question, i) => (
+        <div
+          key={i}
+          className="border border-green-500 m-5 rounded-md py-5 px-10"
+        >
           {/* Question */}
           <div className="">
             <p className="font-bold text-xl"> {question.question}</p>
           </div>
-          
+
           {/* Choices */}
           <div className="my-3">
-            {question.answers.map((answer,i) => {
-              return <p key={i} className="text-xl px-2">{answer}</p>
+            {question.answers.map((answer, i) => {
+              return (
+                <p key={i} className="text-xl px-2">
+                  {answer}
+                </p>
+              );
             })}
           </div>
 
@@ -60,10 +107,12 @@ function All_MCQS() {
             <p>Correct Answer : {question.correctAnswer}</p>
           </div>
 
-           {/* Buttons */}
-        <div className="mt-5 text-end">
-          <button className="px-10 bg-red-500 cursor-pointer text-white py-2 rounded-md font-bold">Delete</button>
-        </div>
+          {/* Buttons */}
+          <div className="mt-5 text-end">
+            <button className="px-10 bg-red-500 cursor-pointer text-white py-2 rounded-md font-bold">
+              Delete
+            </button>
+          </div>
         </div>
       ))}
     </div>
