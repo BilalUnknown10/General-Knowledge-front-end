@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../components/Input";
 import ClearIcon from "@mui/icons-material/Clear";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -64,6 +64,11 @@ function Login() {
   const backToHome = () => {
     navigate("/", { replace: true });
   };
+
+  useEffect(() =>{
+    document.title = "Login-page"
+  },[])
+  
 
   return (
     <div className=" p-20 flex flex-col items-center h-[100vh] justify-center bg-green-800">

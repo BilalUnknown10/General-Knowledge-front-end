@@ -71,6 +71,7 @@ function MCQS() {
   }
 
   useEffect(() => {
+    document.title = "MCQ'S-page | General Knowledge"
     if (!token) {
       navigate("/login");
     }

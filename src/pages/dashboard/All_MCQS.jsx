@@ -5,6 +5,8 @@ import { toast } from "react-toastify";
 
 function All_MCQS() {
   const [allMCQS, setAllMCQS] = useState([]);
+  const [sendMailLoading, setSendMailLoading] = useState(false);
+
 
   const { Admin_Api } = useContext(UserContext);
 
@@ -57,6 +59,24 @@ function All_MCQS() {
     }
   };
 
+  const sendMailToAllUsers = async () => {
+    setSendMailLoading(true)
+    try {
+      const response = await axios.post(`${Admin_Api}/sendEmailToAllUser`,{},{
+        headers : {
+          "Content-Type" : "application/json",
+          Authorization : `Bearer ${token}`
+        }
+      });
+
+      toast.success(response.data.message)
+    } catch (error) {
+      console.log("Error in send mail to all users : ", error);
+    }finally {
+      setSendMailLoading(false);
+    }
+  }
+
   useEffect(() => {
     getAllMCQS();
   }, []);
@@ -69,12 +89,21 @@ function All_MCQS() {
       <div className="my-10 px-10 flex justify-end gap-5">
         <button
           onClick={deleteAllMCQS}
+          disabled={sendMailLoading}
           className="bg-red-500 text-xl font-bold cursor-pointer text-white px-10 py-2 rounded-md"
         >
           Delete All MCQ'S
         </button>
         <button
+          onClick={sendMailToAllUsers}
+          disabled={sendMailLoading}
+          className="bg-green-500 text-xl font-bold cursor-pointer text-white px-10 py-2 rounded-md"
+        >
+          {sendMailLoading ? "Sending Emails...." : "Send Mail To All Users"}
+        </button>
+        <button
           onClick={deleteAllAnswers}
+          disabled={sendMailLoading}
           className="bg-red-500 text-xl font-bold cursor-pointer text-white px-10 py-2 rounded-md"
         >
           Delete All Answers
