@@ -16,6 +16,7 @@ import NotFound from "./pages/NotFound";
 import Users from "./pages/dashboard/Users";
 import All_MCQS from "./pages/dashboard/All_MCQS";
 import All_Feedbacks from "./pages/dashboard/All_Feedbacks";
+import PointsTable from "./pages/PointsTable";
 
 function App() {
   const { userDetails } = useContext(UserContext);
@@ -53,9 +54,20 @@ function App() {
               </>
             }
           />
+
+          <Route
+            path="/points"
+            element={
+              <>
+                <Navbar />
+                <PointsTable />
+              </>
+            }
+          />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/verification" element={<Verification />} />
+          
 
           {userDetails?.isAdmin === true && (
             <Route path="/admin">

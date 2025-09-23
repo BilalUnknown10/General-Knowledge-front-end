@@ -20,7 +20,7 @@ function Navbar() {
     setIsUserLogin,
     userDetails,
     generateOTP,
-    emailVerification
+    emailVerification,
   } = useContext(UserContext);
 
   const openMenu = () => {
@@ -32,7 +32,6 @@ function Navbar() {
     setIsUserLogin(false);
     toast.success("Logout Successfully");
   };
- 
 
   const backToHome = () => {
     setMobileMenu(false);
@@ -138,16 +137,18 @@ function Navbar() {
                             navigate("/verification"); // using useNavigate from react-router
                           }}
                           className="cursor-pointer border-b"
-                          disabled = {emailVerification}
+                          disabled={emailVerification}
                         >
-                          {emailVerification ? "Please Wait..." : "Verify Your Account"}
+                          {emailVerification
+                            ? "Please Wait..."
+                            : "Verify Your Account"}
                         </li>
                       </Link>
                     )}
                   </>
                 ) : (
                   <>
-                  <Link to={"/signup"}>
+                    <Link to={"/signup"}>
                       <li
                         onClick={backToHome}
                         className="cursor-pointer border-b"
@@ -163,7 +164,6 @@ function Navbar() {
                         Login
                       </li>
                     </Link>
-                    
                   </>
                 )}
               </ul>
@@ -182,9 +182,17 @@ function Navbar() {
               <Link to={"/mcqs"}>
                 <li className="cursor-pointer hover:text-blue-800">MCQS</li>
               </Link>
+              <Link to={'/points'}>
+                <li className="cursor-pointer hover:text-blue-800">
+                  Points-Table
+                </li>
+              </Link>
               {userDetails.isAdmin === true && (
                 <Link to={"/admin/dashboard"}>
-                  <li onClick={backToHome} className="cursor-pointer hover:text-blue-800">
+                  <li
+                    onClick={backToHome}
+                    className="cursor-pointer hover:text-blue-800"
+                  >
                     Admin
                   </li>
                 </Link>
@@ -285,9 +293,11 @@ function Navbar() {
                           console.log("clicked verification");
                         }}
                         className="border rounded-md px-6 py-2 cursor-pointer transition-all duration-500 ease-in-out hover:border-green-300 shadow-md hover:text-black hover:bg-green-300"
-                        disabled = {emailVerification}
+                        disabled={emailVerification}
                       >
-                       {emailVerification ? "Please Wait..." : "Verify Your Account"}
+                        {emailVerification
+                          ? "Please Wait..."
+                          : "Verify Your Account"}
                       </button>
                     </div>
                   )}

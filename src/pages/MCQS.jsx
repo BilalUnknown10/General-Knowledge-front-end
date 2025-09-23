@@ -253,7 +253,7 @@ function MCQS() {
                 )}
               </div>
             </>
-            {userDetails?.submittedAnswers?.length === allQuestions?.length && (
+            {userDetails?.submittedAnswers?.length === allQuestions?.length && questionNumber === allQuestions.length-1 && (
               <div className=" text-end px-10 ">
               <button onClick={handleDownloadMCQS} className="bg-green-400 text-white font-bold px-6 py-1 rounded-md cursor-pointer">
                 Download All MCQ'S
