@@ -114,6 +114,11 @@ function Navbar() {
                     MCQS
                   </li>
                 </Link>
+                <Link to={"/points"}>
+                  <li className="cursor-pointer hover:text-blue-800">
+                    Points-Table
+                  </li>
+                </Link>
                 {isUserLogin ? (
                   <>
                     <Link onClick={logout}>
@@ -182,7 +187,7 @@ function Navbar() {
               <Link to={"/mcqs"}>
                 <li className="cursor-pointer hover:text-blue-800">MCQS</li>
               </Link>
-              <Link to={'/points'}>
+              <Link to={"/points"}>
                 <li className="cursor-pointer hover:text-blue-800">
                   Points-Table
                 </li>
