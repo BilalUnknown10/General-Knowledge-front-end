@@ -132,7 +132,7 @@ function PointsTable() {
       getAllUsers();
       getAllQuestions();
     }
-  }, []);
+  }, [token]);
 
   return (
     <div>

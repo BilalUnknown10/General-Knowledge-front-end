@@ -86,7 +86,7 @@ function All_MCQS() {
         <h1>All MCQ'S</h1>
       </div>
 
-      <div className="my-10 px-10 flex justify-end gap-5">
+      <div className="my-10 px-10 flex flex-col md:flex-row md:justify-end md:items-center gap-5 text-end">
         <button
           onClick={deleteAllMCQS}
           disabled={sendMailLoading}
@@ -94,19 +94,21 @@ function All_MCQS() {
         >
           Delete All MCQ'S
         </button>
-        <button
-          onClick={sendMailToAllUsers}
-          disabled={sendMailLoading}
-          className="bg-green-500 text-xl font-bold cursor-pointer text-white px-10 py-2 rounded-md"
-        >
-          {sendMailLoading ? "Sending Emails...." : "Send Mail To All Users"}
-        </button>
+        
         <button
           onClick={deleteAllAnswers}
           disabled={sendMailLoading}
           className="bg-red-500 text-xl font-bold cursor-pointer text-white px-10 py-2 rounded-md"
         >
           Delete All Answers
+        </button>
+
+        <button
+          onClick={sendMailToAllUsers}
+          disabled={sendMailLoading}
+          className="bg-green-500 text-xl font-bold cursor-pointer text-white px-10 py-2 rounded-md"
+        >
+          {sendMailLoading ? "Sending Emails...." : "Send Mail To All Users"}
         </button>
       </div>
 
