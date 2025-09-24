@@ -115,7 +115,7 @@ function Navbar() {
                   </li>
                 </Link>
                 <Link to={"/points"}>
-                  <li className="cursor-pointer hover:text-blue-800">
+                  <li className="cursor-pointer border-b">
                     Points-Table
                   </li>
                 </Link>

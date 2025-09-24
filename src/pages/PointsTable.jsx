@@ -64,11 +64,11 @@ function PointsTable() {
         <h1 className="w-1/5 text-end">Total Points</h1>
       </div>
       {allUsers.map((user, i) => (
-        <div key={i} className={`bg-green-500 md:flex justify-between m-5 p-5 rounded-md text-xl font-semibold text-white`}>
+        <div key={i} className={`border border-green-500 md:flex justify-between m-5 p-5 rounded-md text-xl font-semibold text-black`}>
             <h1 className="md:w-1/5"><span className="md:hidden">Name : </span> {user.userName}</h1>
             <p className="md:w-1/5 md:text-center"><span className="md:hidden">Total Questions : </span> {user?.submittedAnswers?.length} / {allQuestions.length}</p>
-            <p className="md:w-1/5 md:text-center"><span className="md:hidden">Correct / Wrong : </span>  {user?.submittedAnswers.filter(item => item.status === true).length} / {user?.submittedAnswers.filter(item => item.status === false).length}</p>
-            <p className="md:w-1/5 md:text-center"><span className="md:hidden">Percentage : </span> {user?.submittedAnswers.filter(item => item.status === true).length/allQuestions.length*100}%</p>
+            <p className="md:w-1/5 md:text-center"><span className="md:hidden"><span className="text-green-500">Correct</span> / <span className="text-red-500">Wrong</span> : </span>  <span className="text-green-900">{user?.submittedAnswers.filter(item => item.status === true).length}</span> / <span className="text-red-500">{user?.submittedAnswers.filter(item => item.status === false).length}</span></p>
+            <p className="md:w-1/5 md:text-center"><span className="md:hidden">Percentage : </span> {Math.floor(user?.submittedAnswers.filter(item => item.status === true).length/allQuestions.length*100)}%</p>
             <p className="md:w-1/5 md:text-end"> <span className="md:hidden">Total Points : </span>  {user?.submittedAnswers.filter(item => item.status === true).length}</p>
         </div>
       ))}
