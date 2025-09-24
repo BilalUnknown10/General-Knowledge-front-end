@@ -30,6 +30,7 @@ function Navbar() {
   const logout = async () => {
     localStorage.removeItem("GKT");
     setIsUserLogin(false);
+    setMobileMenu(false);
     toast.success("Logout Successfully");
   };
 
@@ -115,15 +116,12 @@ function Navbar() {
                   </li>
                 </Link>
                 <Link to={"/points"}>
-                  <li className="cursor-pointer border-b">
+                  <li onClick={backToHome} className="cursor-pointer border-b">
                     Points-Table
                   </li>
                 </Link>
                 {isUserLogin ? (
                   <>
-                    <Link onClick={logout}>
-                      <li className="cursor-pointer border-b">Logout</li>
-                    </Link>
                     {userDetails.isAdmin === true && (
                       <Link to={"/admin/dashboard"}>
                         <li
@@ -134,6 +132,12 @@ function Navbar() {
                         </li>
                       </Link>
                     )}
+
+                    {/* Logout */}
+                     <Link onClick={logout}>
+                      <li className="cursor-pointer border-b">Logout</li>
+                    </Link>
+
                     {userDetails.isEmailVerified === false && (
                       <Link>
                         <li
