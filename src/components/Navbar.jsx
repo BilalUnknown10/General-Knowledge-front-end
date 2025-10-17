@@ -12,6 +12,7 @@ import axios from 'axios';
 function Navbar() {
   const [emailVerifyMenu, setEmailVerifyMenu] = useState(false);
   const [updateAvatar, setUpdateAvatar] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   gsap.registerPlugin(useGSAP);
 
@@ -44,19 +45,22 @@ function Navbar() {
 
   // Edit user avatar
   const editUserAvatar = async () => {
+    setIsLoading(true);
     const response = await axios.get(`${User_Api}/editUserAvatar`,{
       headers : {
         "Content-Type" : "application/json",
         "Authorization" : `Bearer ${localStorage.getItem("GKT")}`
       }
     });
-    toast.success(response.data);
-    setUpdateAvatar(!updateAvatar)
+    if(response.status === 200) {
+      toast.success(response.data);
+      setUpdateAvatar(!updateAvatar);
+      setIsLoading(false);
+    }
   }
 
   useEffect(() => {
     const token = localStorage.getItem("GKT");
-    console.log("refresh");
     refreshUserDetails(token);
   }, [updateAvatar]);
 
@@ -105,7 +109,7 @@ function Navbar() {
                         className="h-full w-full object-cover rounded-full"
                       />
                     </div>
-                      <button onClick={editUserAvatar} className="bg-green-700 mt-3 px-4 rounded-sm font-bold">Edit Profile</button>
+                      <button onClick={editUserAvatar} className="bg-green-700 mt-3 px-4 rounded-sm font-bold">{isLoading ? "Loading..." : "Edit Profile"}</button>
                     </div>
                   ) : (
                     <AccountCircleIcon className={`!text-7xl`} />
