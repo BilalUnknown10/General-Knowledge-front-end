@@ -7,9 +7,11 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useContext } from "react";
 import UserContext from "../Store/UserContext";
 import { toast } from "react-toastify";
+import axios from 'axios';
 
 function Navbar() {
   const [emailVerifyMenu, setEmailVerifyMenu] = useState(false);
+  const [updateAvatar, setUpdateAvatar] = useState(false);
   const navigate = useNavigate();
   gsap.registerPlugin(useGSAP);
 
@@ -21,6 +23,8 @@ function Navbar() {
     userDetails,
     generateOTP,
     emailVerification,
+    User_Api,
+    refreshUserDetails
   } = useContext(UserContext);
 
   const openMenu = () => {
@@ -38,7 +42,23 @@ function Navbar() {
     setMobileMenu(false);
   };
 
-  useEffect(() => {}, []);
+  // Edit user avatar
+  const editUserAvatar = async () => {
+    const response = await axios.get(`${User_Api}/editUserAvatar`,{
+      headers : {
+        "Content-Type" : "application/json",
+        "Authorization" : `Bearer ${localStorage.getItem("GKT")}`
+      }
+    });
+    toast.success(response.data);
+    setUpdateAvatar(!updateAvatar)
+  }
+
+  useEffect(() => {
+    const token = localStorage.getItem("GKT");
+    console.log("refresh");
+    refreshUserDetails(token);
+  }, [updateAvatar]);
 
   return (
     <>
@@ -76,18 +96,22 @@ function Navbar() {
             <div className="text-center flex flex-col justify-center items-center">
               {isUserLogin ? (
                 <div className="flex justify-center items-center flex-col">
-                  {userDetails?.profileImage ? (
-                    <div className="h-20 w-20 rounded-full">
+                  {userDetails?.userProfileImage ? (
+                    <div className="flex justify-center items-center flex-col">
+                      <div className="h-20 w-20 rounded-full border bg-green-400">
                       <img
-                        src={userDetails?.profileImage}
+                        src={userDetails?.userProfileImage}
                         alt="profile image"
                         className="h-full w-full object-cover rounded-full"
                       />
                     </div>
+                      <button onClick={editUserAvatar} className="bg-green-700 mt-3 px-4 rounded-sm font-bold">Edit Profile</button>
+                    </div>
                   ) : (
                     <AccountCircleIcon className={`!text-7xl`} />
                   )}
-                  <h1>{userDetails.userName}</h1>
+                  <div className="mt-5">
+                    <h1>{userDetails.userName}</h1>
                   <p className="">
                     {userDetails.email} <br />
                     {userDetails.isEmailVerified ? (
@@ -96,6 +120,7 @@ function Navbar() {
                       <span>Unverified Account</span>
                     )}
                   </p>
+                  </div>
                 </div>
               ) : (
                 <>
@@ -213,15 +238,15 @@ function Navbar() {
           <div className="md:flex text-xl items-center gap-x-3 headingWebLogin">
             {isUserLogin ? (
               <>
-                {userDetails.profileImage ? (
+                {userDetails.userProfileImage ? (
                   <div className="flex gap-2 items-center">
                     <div
                       onClick={() => setEmailVerifyMenu(!emailVerifyMenu)}
-                      className="w-16 h-16 rounded-full"
+                      className="w-16 h-16 rounded-full bg-green-400 flex justify-center items-center"
                     >
                       <img
-                        className=" w-full rounded-full cursor-pointer h-full object-cover"
-                        src={userDetails?.profileImage}
+                        className=" w-full rounded-full border cursor-pointer h-full object-cover"
+                        src={userDetails?.userProfileImage}
                         alt="profile image"
                       />
                     </div>
@@ -263,15 +288,15 @@ function Navbar() {
                   }`}
                 >
                   <div className="text-center">
-                    {userDetails.profileImage ? (
+                    {userDetails.userProfileImage ? (
                       <div className="flex flex-col justify-center items-center">
-                        <div className="w-24 h-24 rounded-full relative overflow-hidden">
+                        <div className="w-24 h-24 rounded-full relative bg-green-400 overflow-hidden">
                           <img
-                            className=" w-full rounded-full h-full object-cover"
-                            src={userDetails?.profileImage}
+                            className=" w-full rounded-full h-full border object-cover"
+                            src={userDetails?.userProfileImage}
                             alt="profile image"
                           />
-                          <span className="bg-black bottom-0 w-full left-0 opacity-0 transition-all duration-500 ease-in-out hover:opacity-70 cursor-pointer absolute">
+                          <span onClick={editUserAvatar} className="bg-black bottom-0 w-full left-0 opacity-0 transition-all duration-500 ease-in-out hover:opacity-70 cursor-pointer absolute">
                             Edit
                           </span>
                         </div>
