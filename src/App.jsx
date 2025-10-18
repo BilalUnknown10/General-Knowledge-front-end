@@ -17,6 +17,11 @@ import Users from "./pages/dashboard/Users";
 import All_MCQS from "./pages/dashboard/All_MCQS";
 import All_Feedbacks from "./pages/dashboard/All_Feedbacks";
 import PointsTable from "./pages/PointsTable";
+import ForgetPasswordLink from "./components/ForgetPasswordLink";
+import ForgetPassword from "./components/forgetPassword";
+
+
+
 
 function App() {
   const { userDetails } = useContext(UserContext);
@@ -67,7 +72,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/verification" element={<Verification />} />
-          
+          <Route path="/forgetPassword" element={<ForgetPasswordLink/>}/>
+          <Route path="/forgetPassword/:id" element={<ForgetPassword/>}/>
 
           {userDetails?.isAdmin === true && (
             <Route path="/admin">

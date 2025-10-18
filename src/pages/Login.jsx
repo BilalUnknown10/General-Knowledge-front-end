@@ -138,6 +138,11 @@ function Login() {
             {loading ? "Logging in..." : "Login"}
           </button>
         </div>
+        <div className="text-center">
+          <Link to={'/forgetPassword'}>
+          <p className="mt-5 font-semibold text-blue-600 hover:cursor-pointer">Forget Password?</p>
+          </Link>
+        </div>
         <div className="border-t w-full mt-10 relative">
           <h1 className="absolute left-1/2 -translate-x-1/2 -top-3 bg-white px-2 text-sm text-gray-600">
             OR
