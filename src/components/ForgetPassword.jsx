@@ -9,7 +9,7 @@ function ForgetPassword() {
     const [password, setPassword] = useState("");
     const [CPassword, setCPassword] = useState("");
     const [loading, setLoading] = useState(false);
-    const [visiblePass, setVisiblePass] = useState(false);
+    // const [visiblePass, setVisiblePass] = useState(false);
 
     const {User_Api} = useContext(UserContext);
     const navigate = useNavigate();
@@ -47,7 +47,7 @@ function ForgetPassword() {
         <Input
                   mainDivClassName={" w-[80vw]"}
                   label={"New Password : "}
-                  type={`${visiblePass ? "text" : "password"}`}
+                  type={"password"}
                   name={"password"}
                   inputId={"password"}
                   inputValue={password}
@@ -62,9 +62,9 @@ function ForgetPassword() {
         <Input
                   mainDivClassName={" w-[80vw]"}
                   label={"Confirm Password : "}
-                  type={`${visiblePass ? "text" : "password"}`}
-                  name={"password"}
-                  inputId={"password"}
+                  type={"password"}
+                  name={"CPassword"}
+                  inputId={"CPassword"}
                   inputValue={CPassword}
                   inputClassName={"border w-full"}
                   placeholder={"Confirm Password"}
