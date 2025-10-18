@@ -18,7 +18,7 @@ import All_MCQS from "./pages/dashboard/All_MCQS";
 import All_Feedbacks from "./pages/dashboard/All_Feedbacks";
 import PointsTable from "./pages/PointsTable";
 import ForgetPasswordLink from "./components/ForgetPasswordLink";
-import ForgetPassword from "/components/ForgetPassword";
+import ForgetPassword from "./components/ForgetPassword";
 
 
 function App() {
