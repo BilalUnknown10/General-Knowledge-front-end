@@ -45,8 +45,8 @@ function ForgetPasswordLink() {
             onChange={(e) => setEmail(e.target.value)}
           />
           <div className="text-center w-[70vw] flex justify-between mt-6">
-            <button className="w-[30vh] hover:cursor-pointer font-bold md:text-2xl bg-green-500 py-3 rounded-md text-white ">Back</button>
-            <button onClick={sendForgePasswordLink} className="w-[30vh] hover:cursor-pointer font-bold md:text-2xl bg-green-500 py-3 rounded-md text-white ">Send Email Link</button>
+            <button className="md:w-[30vh] w-[15vh] hover:cursor-pointer font-bold md:text-2xl bg-green-500 py-3 rounded-md text-white ">Back</button>
+            <button onClick={sendForgePasswordLink} className="md:w-[30vh] w-[15vh] hover:cursor-pointer font-bold md:text-2xl bg-green-500 py-3 rounded-md text-white ">Send Email Link</button>
         </div>
         </div>
       </div>

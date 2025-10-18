@@ -74,8 +74,8 @@ function ForgetPassword() {
       </div>
 
       <div className="text-center w-[80vw] flex justify-between mt-6">
-            <button className="w-[30vh] hover:cursor-pointer font-bold md:text-2xl bg-green-500 py-3 rounded-md text-white ">Back</button>
-            <button disabled={loading} onClick={updatePassword} className="w-[30vh] hover:cursor-pointer font-bold md:text-2xl bg-green-500 py-3 rounded-md text-white ">{loading ? "Loading..." : "Update Password"}</button>
+            <button className="md:w-[30vh] w-[15vh] hover:cursor-pointer font-bold md:text-2xl bg-green-500 py-3 rounded-md text-white ">Back</button>
+            <button disabled={loading} onClick={updatePassword} className="md:w-[30vh] w-[15vh] hover:cursor-pointer font-bold md:text-2xl bg-green-500 py-3 rounded-md text-white ">{loading ? "Loading..." : "Update Password"}</button>
         </div>
     </div>
     </div>
