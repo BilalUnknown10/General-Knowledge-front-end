@@ -81,7 +81,7 @@ useEffect(() => {
 
     userDetail(token);
   }
-}, [isUserLogin, User_Api]);
+}, [isUserLogin, User_Api, loginUserToken]);
 
 
   return (
