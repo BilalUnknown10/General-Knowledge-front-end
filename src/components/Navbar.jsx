@@ -22,6 +22,7 @@ function Navbar() {
     isUserLogin,
     setIsUserLogin,
     userDetails,
+    setUserDetails,
     generateOTP,
     emailVerification,
     User_Api,
@@ -36,6 +37,7 @@ function Navbar() {
     localStorage.removeItem("GKT");
     setIsUserLogin(false);
     setMobileMenu(false);
+    setUserDetails("");
     toast.success("Logout Successfully");
   };
 
@@ -61,7 +63,9 @@ function Navbar() {
 
   useEffect(() => {
     const token = localStorage.getItem("GKT");
-    refreshUserDetails(token);
+    if(token) {
+      refreshUserDetails(token);
+    }
   }, [updateAvatar]);
 
   return (

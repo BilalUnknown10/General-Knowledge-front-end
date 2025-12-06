@@ -81,7 +81,7 @@ useEffect(() => {
 
     userDetail(token);
   }
-}, [isUserLogin, User_Api, loginUserToken]);
+}, [isUserLogin, User_Api]);
 
 
   return (
@@ -95,6 +95,7 @@ useEffect(() => {
         isUserLogin,
         setIsUserLogin,
         userDetails,
+        setUserDetails,
         loginUserToken,
         generateOTP,
         refreshUserDetails,
