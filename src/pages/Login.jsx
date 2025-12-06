@@ -149,13 +149,13 @@ function Login() {
           </h1>
         </div>
 
-        <div className="mt-8 text-center">
+        {/* <div className="mt-8 text-center">
           <button
             className="bg-blue-500 cursor-not-allowed md:text-xl md:tracking-widest text-white px-4 py-2 rounded transition-all duration-300 w-full hover:bg-blue-600"
           >
             Login with Google
           </button>
-        </div>
+        </div> */}
         <div className="mt-8 text-center">
           <Link to={"/signup"}>
             <button className="bg-green-500 cursor-pointer md:text-xl md:tracking-widest text-white px-4 py-2 rounded transition-all duration-300 w-full hover:bg-green-600">
