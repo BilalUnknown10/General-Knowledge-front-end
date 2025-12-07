@@ -113,7 +113,7 @@ function MCQS() {
   return (
     <div className="h-[90vh] flex flex-col justify-center items-center">
       {/* MCQ'S header section */}
-      <div className="bg-green-500 rounded-t-xl md:w-1/2 w-[90vw] px-5 py-2 flex justify-between items-center ">
+      <div className="bg-[var(--primary)] rounded-t-xl md:w-1/2 w-[90vw] px-5 py-2 flex justify-between items-center ">
         <div className="md:text-3xl text-xl font-bold text-white">
           <h1>Question</h1>
         </div>
@@ -131,21 +131,21 @@ function MCQS() {
 
       {/* MCQ'S section */}
       {submitLoading ? (
-        <div className="flex justify-center items-center h-[50vh] md:w-1/2 w-[90vw] rounded-b-xl border border-green-500">
+        <div className="flex justify-center items-center h-[50vh] md:w-1/2 w-[90vw] rounded-b-xl border border-[var(--primary)]">
           <div className="flex flex-col justify-center items-center gap-4">
             {/* Spinner */}
-            <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
-            <p className="text-green-500 font-bold text-xl">Loading...</p>
+            <div className="w-12 h-12 border-4  border-[var(--primary)] border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-[var(--primary)] font-bold text-xl">Loading...</p>
           </div>
         </div>
       ) : (
-        <div className="border border-green-500 overflow-y-auto h-[50vh] md:w-1/2 w-[90vw] rounded-b-xl">
+        <div className="border border-[var(--primary)] overflow-y-auto h-[50vh] md:w-1/2 w-[90vw] rounded-b-xl">
           {checkQuestionLoading ? (
             // <div className="flex justify-center items-center h-[50vh] md:w-1/2 w-[90vw] rounded-b-xl border border-green-500">
           <div className="flex flex-col justify-center items-center h-[100%] gap-4">
             {/* Spinner */}
-            <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
-            <p className="text-green-500 font-bold text-xl">Loading...</p>
+            <div className="w-12 h-12 border-4 border-[var(--primary)] border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-[var(--primary)] font-bold text-xl">Loading...</p>
           </div>
         // </div>
           ) : (
@@ -160,7 +160,7 @@ function MCQS() {
                     {/* Question */}
                     <div className="p-10 flex flex-col">
                       <p className="font-bold text-xl">
-                        <strong className="text-green-600 text-2xl">
+                        <strong className="text-[var(--primary)] text-2xl">
                           {questionNumber + 1}.{" "}
                         </strong>
                         {allQuestions[questionNumber]?.question}
@@ -201,9 +201,9 @@ function MCQS() {
                               onClick={() =>
                                 submitQuestion(allQuestions[questionNumber]._id)
                               }
-                              className={`px-10 py-1 rounded-md bg-green-500 font-semibold text-white text-xl ${
+                              className={`px-10 py-1 rounded-md bg-[var(--primary)] font-semibold text-white text-xl ${
                                 submitLoading
-                                  ? "cursor-not-allowed bg-green-800"
+                                  ? "cursor-not-allowed bg-[var(--primary)]"
                                   : "cursor-pointer"
                               }`}
                             >
@@ -244,7 +244,7 @@ function MCQS() {
                                 <div className="text-end self-end mt-10 flex justify-end gap-5">
                                   <button
                                     onClick={nextQuestion}
-                                    className={`px-10 py-1 rounded-md cursor-pointer bg-green-500 font-semibold text-white text-xl `}
+                                    className={`px-10 py-1 rounded-md cursor-pointer bg-[var(--primary)] font-semibold text-white text-xl `}
                                   >
                                     Next
                                   </button>
@@ -279,7 +279,7 @@ function MCQS() {
                                 <div className="text-end self-end mt-10 flex justify-end">
                                   <button
                                     onClick={nextQuestion}
-                                    className={`px-10 py-1 rounded-md bg-green-500 font-semibold text-white text-xl cursor-pointer `}
+                                    className={`px-10 py-1 rounded-md bg-[var(--primary)] font-semibold text-white text-xl cursor-pointer `}
                                   >
                                     Next
                                   </button>
@@ -297,7 +297,7 @@ function MCQS() {
                       <div className=" text-end px-10 ">
                         <button
                           onClick={handleDownloadMCQS}
-                          className="bg-green-400 text-white font-bold px-6 py-1 rounded-md cursor-pointer"
+                          className="bg-[var(--primary)] text-white font-bold px-6 py-1 rounded-md cursor-pointer"
                         >
                           Download All MCQ'S
                         </button>
