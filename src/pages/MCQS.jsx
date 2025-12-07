@@ -92,7 +92,7 @@ function MCQS() {
         });
         setAllQuestions(response.data);
         setTimeout(() => {
-          setCheckQuestionLoading(false);
+          setCheckQuestionLoading(true);
         }, 2000);
       } catch (error) {
         console.log("error in get all mcq's : ", error);
@@ -141,13 +141,13 @@ function MCQS() {
       ) : (
         <div className="border border-green-500 overflow-y-auto h-[50vh] md:w-1/2 w-[90vw] rounded-b-xl">
           {checkQuestionLoading ? (
-            <div className="flex justify-center items-center h-[50vh] md:w-1/2 w-[90vw] rounded-b-xl">
-          <div className="flex flex-col justify-center items-center gap-4">
+            // <div className="flex justify-center items-center h-[50vh] md:w-1/2 w-[90vw] rounded-b-xl border border-green-500">
+          <div className="flex flex-col justify-center items-center h-[100%] gap-4">
             {/* Spinner */}
-            <div className="w-12 h-12 rounded-full animate-spin"></div>
+            <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
             <p className="text-green-500 font-bold text-xl">Loading...</p>
           </div>
-        </div>
+        // </div>
           ) : (
             <>
               {allQuestions.length < 1 ? (
