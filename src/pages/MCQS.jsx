@@ -141,7 +141,7 @@ function MCQS() {
       ) : (
         <div className="border border-green-500 overflow-y-auto h-[50vh] md:w-1/2 w-[90vw] rounded-b-xl">
           {checkQuestionLoading ? (
-            <div className="flex flex-col justify-center items-center gap-4 h-[49vh]">
+            <div className="flex flex-col justify-center items-center gap-4 h-[50vh]">
               {/* Spinner */}
               <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
               <p className="text-green-500 font-bold text-xl">Loading...</p>
