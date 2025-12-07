@@ -8,7 +8,7 @@ import { handleDownloadPdf } from "../Store/Download_pdf";
 
 function MCQS() {
   const [allQuestions, setAllQuestions] = useState([]);
-  const [checkQuestionLoading, setCheckQuestionLoading] = useState(false);
+  const [checkQuestionLoading, setCheckQuestionLoading] = useState(true);
   const [questionNumber, setQuestionNumber] = useState(0);
   const [submitAnswer, setSubmitAnswer] = useState("");
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -82,7 +82,7 @@ function MCQS() {
     }
 
     const getAllQuestions = async () => {
-      setCheckQuestionLoading(true);
+      // setCheckQuestionLoading(true);
       try {
         const response = await axios.get(`${User_Api}/getAllQuestions`, {
           headers: {
@@ -141,11 +141,13 @@ function MCQS() {
       ) : (
         <div className="border border-green-500 overflow-y-auto h-[50vh] md:w-1/2 w-[90vw] rounded-b-xl">
           {checkQuestionLoading ? (
-            <div className="flex flex-col justify-center items-center gap-4 h-[50vh]">
-              {/* Spinner */}
-              <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
-              <p className="text-green-500 font-bold text-xl">Loading...</p>
-            </div>
+            <div className="flex justify-center items-center h-[50vh] md:w-1/2 w-[90vw] rounded-b-xl border border-green-500">
+          <div className="flex flex-col justify-center items-center gap-4">
+            {/* Spinner */}
+            <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-green-500 font-bold text-xl">Loading...</p>
+          </div>
+        </div>
           ) : (
             <>
               {allQuestions.length < 1 ? (
