@@ -71,10 +71,10 @@ function Navbar() {
   return (
     <>
       {/* main container of navbar */}
-      <div className="bg-green-600 text-white flex justify-between items-center p-4 md:p-4 md:px-10 md:h-20">
+      <div className="bg-[var(--primary)] text-white flex justify-between items-center p-4 md:p-4 md:px-10 md:h-20">
         {/* Logo or name of website */}
         <div className=" text-2xl md:text-3xl font-bold headingWebName">
-          <h1 className="hover:text-blue-900 cursor-pointer">
+          <h1 className="hover:text-green-300 cursor-pointer">
             <Link to={"/"}>General Knowledge</Link>
           </h1>
         </div>
@@ -98,7 +98,7 @@ function Navbar() {
         <div
           className={`absolute right-0 transition-all duration-700 ease-in-out ${
             mobileMenu ? "top-[50px] opacity-100" : "top-[-500px] opacity-0"
-          } z-50 w-full bg-green-800  mobileMenu`}
+          } z-50 w-full bg-[var(--primary)]  mobileMenu`}
         >
           <div className="p-5">
             <div className="text-center flex flex-col justify-center items-center">
@@ -113,7 +113,7 @@ function Navbar() {
                         className="h-full w-full object-cover rounded-full"
                       />
                     </div>
-                      <button onClick={editUserAvatar} className="bg-green-700 mt-3 px-4 rounded-sm font-bold">{isLoading ? "Loading..." : "Edit Profile"}</button>
+                      <button onClick={editUserAvatar} className="bg-green-500 mt-3 px-4 rounded-sm font-bold">{isLoading ? "Loading..." : "Edit Profile"}</button>
                     </div>
                   ) : (
                     <AccountCircleIcon className={`!text-7xl`} />
@@ -219,13 +219,13 @@ function Navbar() {
           <div className="headingWebpages">
             <ul className="md:flex text-2xl font-semibold gap-x-5">
               <Link to={"/"}>
-                <li className="cursor-pointer hover:text-blue-800">Home</li>
+                <li className="cursor-pointer hover:text-green-500">Home</li>
               </Link>
               <Link to={"/mcqs"}>
-                <li className="cursor-pointer hover:text-blue-800">MCQS</li>
+                <li className="cursor-pointer hover:text-green-500">MCQS</li>
               </Link>
               <Link to={"/points"}>
-                <li className="cursor-pointer hover:text-blue-800">
+                <li className="cursor-pointer hover:text-green-500">
                   Points-Table
                 </li>
               </Link>
@@ -233,7 +233,7 @@ function Navbar() {
                 <Link to={"/admin/dashboard"}>
                   <li
                     onClick={backToHome}
-                    className="cursor-pointer hover:text-blue-800"
+                    className="cursor-pointer hover:text-green-500"
                   >
                     Admin
                   </li>
@@ -281,7 +281,7 @@ function Navbar() {
                 <Link>
                   <button
                     onClick={logout}
-                    className=" rounded-md cursor-pointer hover:text-blue-800"
+                    className=" rounded-md cursor-pointer hover:text-green-500"
                   >
                     {" "}
                     LogOut
@@ -348,13 +348,13 @@ function Navbar() {
             ) : (
               <>
                 <Link to={"/signup"}>
-                  <button className=" rounded-md cursor-pointer hover:text-blue-800">
+                  <button className=" rounded-md cursor-pointer hover:text-green-500">
                     Signup
                   </button>
                 </Link>
                 <div className="border-r-1 h-7 hidden md:block"></div>
                 <Link to={"/login"}>
-                  <button className="  rounded-md cursor-pointer hover:text-blue-800">
+                  <button className="  rounded-md cursor-pointer hover:text-green-500">
                     Login
                   </button>
                 </Link>

@@ -26,7 +26,7 @@ function ForgetPasswordLink() {
   }
 
   return (
-    <div className="bg-green-500 h-[100vh] w-[100vw] flex justify-center items-center">
+    <div className="bg-[var(--primary)] min-h-[100vh] w-[100vw] flex justify-center items-center">
       <div className="bg-white h-[90vh] w-[90vw] rounded-md flex flex-col justify-center items-center">
         <div className="text-center py-5 md:py-10">
           <h1 className="font-bold text-2xl md:text-4xl">Please Enter Your Registered Email</h1>

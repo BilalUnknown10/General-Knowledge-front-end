@@ -81,7 +81,7 @@ function Verification() {
   }, [seconds]);
 
   return (
-    <div className="bg-green-700 h-[100vh] flex justify-center items-center flex-col px-8 md:px-20">
+    <div className="bg-[var(--primary)] h-[100vh] flex justify-center items-center flex-col px-8 md:px-20">
       <div className="md:h-[50vh] h-[50vh] bg-white rounded-2xl w-[100%] md:w-[50%]">
         <div className=" text-center my-5">
           <h1 className="md:text-3xl font-bold text-xl">Verification OTP</h1>

@@ -71,7 +71,7 @@ function Login() {
   
 
   return (
-    <div className=" p-20 flex flex-col items-center h-[100vh] justify-center bg-green-800">
+    <div className=" p-20 flex flex-col items-center h-[100vh] justify-center bg-[var(--primary)]">
       <div className="relative border border-gray-500 shadow-md shadow-gray-500 rounded-md md:w-[400px] w-[90vw] md:p-10 py-10 px-5 bg-green-50">
         <div onClick={backToHome}>
           <ClearIcon className="absolute text-white bg-red-500 top-2 cursor-pointer right-2" />

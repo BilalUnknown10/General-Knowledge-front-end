@@ -21,7 +21,7 @@ function GiveYourFeedback() {
           </p>
           <div className="text-center">
             <Link to={'/feedback'}>            
-            <button className="border px-10 py-2 rounded-md cursor-pointer font-bold bg-green-500 border-none text-white">Feedback</button>
+            <button className="border px-10 py-2 rounded-md cursor-pointer font-bold bg-[var(--primary)] text-white border-none">Feedback</button>
             </Link>
           </div>
         </div>

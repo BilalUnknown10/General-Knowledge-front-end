@@ -38,7 +38,7 @@ function ForgetPassword() {
 
 
   return (
-    <div className='bg-green-500 h-[100vh] flex flex-col justify-center items-center'>
+    <div className='bg-[var(--primary)] min-h-[100vh] flex flex-col justify-center items-center'>
     <div className='flex-col space-y-10 p-5  md:p-20 rounded-md bg-white'>
         <div className='text-center'>
             <h1 className='md:text-4xl'>New Password</h1>
