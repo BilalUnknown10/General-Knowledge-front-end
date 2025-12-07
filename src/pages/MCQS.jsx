@@ -62,7 +62,7 @@ function MCQS() {
     } finally {
       setTimeout(() => {
         setSubmitLoading(false);
-      }, 500);
+      }, 800);
     }
   };
 
