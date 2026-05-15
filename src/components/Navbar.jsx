@@ -1,22 +1,20 @@
 import React, { useEffect, useState } from "react";
 import DensityMediumIcon from "@mui/icons-material/DensityMedium";
-import { Link, useNavigate } from "react-router-dom";
+import CloseIcon from "@mui/icons-material/Close";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import UserContext from "../Store/UserContext";
 import { toast } from "react-toastify";
 import axios from "axios";
 
 function Navbar() {
-  const [emailVerifyMenu, setEmailVerifyMenu] = useState(false);
-  const [updateAvatar, setUpdateAvatar] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const {
-    mobileMenu,
-    setMobileMenu,
     isUserLogin,
     setIsUserLogin,
     userDetails,
@@ -27,20 +25,14 @@ function Navbar() {
     refreshUserDetails,
   } = useContext(UserContext);
 
-  const openMenu = () => {
-    setMobileMenu(!mobileMenu);
-  };
-
-  const backToHome = () => {
-    setMobileMenu(false);
-  };
+  const toggleMenu = () => setMenuOpen((prev) => !prev);
 
   const logout = () => {
     localStorage.removeItem("GKT");
     setIsUserLogin(false);
     setUserDetails(null);
-    setMobileMenu(false);
-    toast.success("Logout Successfully");
+    setMenuOpen(false);
+    toast.success("Logged out successfully");
   };
 
   const editUserAvatar = async () => {
@@ -50,17 +42,15 @@ function Navbar() {
       const token = localStorage.getItem("GKT");
 
       const response = await axios.get(`${User_Api}/editUserAvatar`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (response.status === 200) {
-        toast.success(response.data.message || "Avatar updated");
-        setUpdateAvatar((prev) => !prev);
+        toast.success("Avatar updated");
+        refreshUserDetails(token);
       }
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Error updating avatar");
+      toast.error("Failed to update avatar");
     } finally {
       setIsLoading(false);
     }
@@ -68,115 +58,116 @@ function Navbar() {
 
   useEffect(() => {
     const token = localStorage.getItem("GKT");
-    if (token) {
-      refreshUserDetails(token);
-    }
-  }, [updateAvatar]);
+    if (token) refreshUserDetails(token);
+  }, []);
 
   return (
-    <div className="bg-[var(--primary)] text-white flex justify-between items-center p-4 md:px-10 md:h-20">
-      
-      {/* Logo */}
-      <div className="text-2xl md:text-3xl font-bold">
-        <Link to={"/"}>General Knowledge</Link>
-      </div>
+    <header className="sticky top-0 z-50 bg-[var(--primary)]/95 backdrop-blur-md text-white shadow-lg">
 
-      {/* Mobile icon */}
-      <div className="md:hidden" onClick={openMenu}>
-        <DensityMediumIcon className="!text-3xl cursor-pointer" />
-      </div>
+      <div className="max-w-7xl mx-auto flex justify-between items-center px-5 md:px-10 h-16">
 
-      {/* MOBILE MENU */}
-      <div
-        className={`absolute right-0 w-full bg-[var(--primary)] z-50 transition-all duration-500 ${
-          mobileMenu ? "top-[50px] opacity-100" : "top-[-500px] opacity-0"
-        }`}
-      >
-        <div className="p-5 text-center">
-          
-          {isUserLogin ? (
-            <div>
-              {userDetails?.userProfileImage ? (
-                <div>
-                  <img
-                    src={userDetails.userProfileImage}
-                    className="h-20 w-20 rounded-full mx-auto"
-                  />
-                  <button
-                    onClick={editUserAvatar}
-                    className="mt-2 bg-green-500 px-3 py-1 rounded"
-                  >
-                    {isLoading ? "Loading..." : "Edit Profile"}
-                  </button>
-                </div>
-              ) : (
-                <AccountCircleIcon className="!text-7xl" />
-              )}
+        {/* Logo */}
+        <Link to="/" className="text-xl md:text-2xl font-extrabold tracking-wide">
+          GK <span className="text-green-200">MCQs</span>
+        </Link>
 
-              <h1 className="mt-3">{userDetails?.userName}</h1>
-              <p>{userDetails?.email}</p>
-            </div>
-          ) : (
-            <AccountCircleIcon className="!text-7xl" />
+        {/* Desktop Menu */}
+        <nav className="hidden md:flex items-center gap-8 text-base font-medium">
+
+          <Link className="hover:text-green-200 transition" to="/">Home</Link>
+          <Link className="hover:text-green-200 transition" to="/mcqs">MCQs</Link>
+          <Link className="hover:text-green-200 transition" to="/points">Points</Link>
+
+          {userDetails?.isAdmin && (
+            <Link className="hover:text-green-200 transition" to="/admin/dashboard">
+              Admin
+            </Link>
           )}
 
+          {isUserLogin ? (
+            <button
+              onClick={logout}
+              className="px-4 py-2 rounded-xl bg-white text-green-700 font-semibold hover:scale-105 transition"
+            >
+              Logout
+            </button>
+          ) : (
+            <>
+              <Link className="hover:text-green-200 transition" to="/signup">Signup</Link>
+              <Link className="hover:text-green-200 transition" to="/login">Login</Link>
+            </>
+          )}
+        </nav>
+
+        {/* Mobile Button */}
+        <button onClick={toggleMenu} className="md:hidden">
+          {menuOpen ? (
+            <CloseIcon className="!text-3xl" />
+          ) : (
+            <DensityMediumIcon className="!text-3xl" />
+          )}
+        </button>
+      </div>
+
+      {/* Mobile Menu */}
+      <div
+        className={`md:hidden absolute w-full left-0 bg-[var(--primary)] transition-all duration-300 ${
+          menuOpen ? "top-16 opacity-100" : "-top-[500px] opacity-0"
+        }`}
+      >
+        <div className="px-6 py-6 space-y-5 text-lg">
+
+          {/* User */}
+          <div className="flex flex-col items-center text-center">
+            {userDetails?.userProfileImage ? (
+              <img
+                src={userDetails.userProfileImage}
+                className="w-20 h-20 rounded-full border-2 border-white"
+                alt="user"
+              />
+            ) : (
+              <AccountCircleIcon className="!text-7xl" />
+            )}
+
+            <h2 className="mt-2 font-bold">{userDetails?.userName}</h2>
+            <p className="text-sm text-white/70">{userDetails?.email}</p>
+
+            {userDetails?.userProfileImage && (
+              <button
+                onClick={editUserAvatar}
+                className="mt-3 px-4 py-1 bg-green-500 rounded-lg text-sm"
+              >
+                {isLoading ? "Updating..." : "Edit Avatar"}
+              </button>
+            )}
+          </div>
+
           {/* Links */}
-          <ul className="flex flex-col gap-5 mt-5 text-xl">
-            <Link to="/" onClick={backToHome}><li>Home</li></Link>
-            <Link to="/mcqs" onClick={backToHome}><li>MCQS</li></Link>
-            <Link to="/points" onClick={backToHome}><li>Points</li></Link>
+          <div className="flex flex-col gap-4 text-center">
+
+            <Link onClick={toggleMenu} to="/">Home</Link>
+            <Link onClick={toggleMenu} to="/mcqs">MCQs</Link>
+            <Link onClick={toggleMenu} to="/points">Points</Link>
+
+            {userDetails?.isAdmin && (
+              <Link onClick={toggleMenu} to="/admin/dashboard">Admin</Link>
+            )}
 
             {isUserLogin ? (
-              <>
-                {userDetails?.isAdmin && (
-                  <Link to="/admin/dashboard" onClick={backToHome}>
-                    <li>Admin</li>
-                  </Link>
-                )}
-
-                {userDetails?.isEmailVerified === false && (
-                  <li
-                    onClick={async () => {
-                      await generateOTP();
-                      navigate("/verification");
-                    }}
-                  >
-                    {emailVerification ? "Please Wait..." : "Verify Account"}
-                  </li>
-                )}
-
-                <li onClick={logout}>Logout</li>
-              </>
+              <button onClick={logout} className="text-red-200">
+                Logout
+              </button>
             ) : (
               <>
-                <Link to="/signup" onClick={backToHome}><li>Signup</li></Link>
-                <Link to="/login" onClick={backToHome}><li>Login</li></Link>
+                <Link onClick={toggleMenu} to="/signup">Signup</Link>
+                <Link onClick={toggleMenu} to="/login">Login</Link>
               </>
             )}
-          </ul>
+          </div>
+
         </div>
       </div>
-
-      {/* DESKTOP MENU */}
-      <div className="hidden md:flex gap-8 items-center text-xl">
-        <Link to="/">Home</Link>
-        <Link to="/mcqs">MCQS</Link>
-        <Link to="/points">Points</Link>
-
-        {userDetails?.isAdmin && (
-          <Link to="/admin/dashboard">Admin</Link>
-        )}
-
-        {isUserLogin ? (
-          <button onClick={logout}>Logout</button>
-        ) : (
-          <>
-            <Link to="/signup">Signup</Link>
-            <Link to="/login">Login</Link>
-          </>
-        )}
-      </div>
-    </div>
+    </header>
   );
 }
 

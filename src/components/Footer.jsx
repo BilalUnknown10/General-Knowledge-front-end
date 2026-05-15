@@ -5,46 +5,50 @@ import LinkedInIcon from "@mui/icons-material/LinkedIn";
 
 function Footer() {
   return (
-    <footer className="bg-gradient-to-br from-green-700 via-green-600 to-green-800 text-white">
+    <footer className="relative bg-gradient-to-br from-green-900 via-green-700 to-green-800 text-white overflow-hidden">
 
-      <div className="max-w-6xl mx-auto px-6 py-12 grid md:grid-cols-2 gap-10">
+      {/* Background Glow */}
+      <div className="absolute top-0 left-0 w-72 h-72 bg-green-400 opacity-20 blur-3xl rounded-full"></div>
+      <div className="absolute bottom-0 right-0 w-72 h-72 bg-emerald-300 opacity-20 blur-3xl rounded-full"></div>
 
-        {/* Left Section */}
+      <div className="relative max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-12">
+
+        {/* LEFT */}
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-wide border-b border-white/30 pb-2">
-            General Knowledge
+          <h1 className="text-3xl md:text-4xl font-extrabold tracking-wide">
+            General Knowledge <span className="text-green-200">MCQs</span>
           </h1>
 
-          <p className="mt-6 text-white/90 leading-relaxed">
+          <p className="mt-6 text-white/80 leading-relaxed text-base md:text-lg">
             Learn, practice, and improve your knowledge through interactive MCQs.
-            We aim to provide a simple and effective learning experience for everyone.
+            We aim to make learning simple, fun, and effective for everyone.
           </p>
 
-          <button className="mt-6 px-6 py-3 bg-white text-green-700 font-semibold rounded-xl hover:bg-green-100 transition">
+          <button className="mt-8 px-6 py-3 rounded-xl bg-white text-green-800 font-semibold hover:bg-green-100 hover:scale-105 transition-all duration-300 shadow-lg">
             Get In Touch
           </button>
         </div>
 
-        {/* Right Section */}
+        {/* RIGHT */}
         <div>
-          <h2 className="text-2xl md:text-3xl font-bold border-b border-white/30 pb-2">
+          <h2 className="text-2xl md:text-3xl font-bold border-b border-white/20 pb-3">
             Contact Us
           </h2>
 
-          <div className="mt-6 space-y-4 text-white/90">
+          <div className="mt-8 space-y-5 text-white/80">
 
-            <div className="flex items-center gap-3 hover:text-white transition">
-              <MarkEmailReadIcon />
+            <div className="flex items-center gap-4 p-3 rounded-xl hover:bg-white/10 transition">
+              <MarkEmailReadIcon className="text-green-200" />
               <span>ourweb.pk@gmail.com</span>
             </div>
 
-            <div className="flex items-center gap-3 hover:text-white transition">
-              <PhoneAndroidIcon />
+            <div className="flex items-center gap-4 p-3 rounded-xl hover:bg-white/10 transition">
+              <PhoneAndroidIcon className="text-green-200" />
               <span>0340XXXXXXX</span>
             </div>
 
-            <div className="flex items-center gap-3 hover:text-white transition">
-              <LinkedInIcon />
+            <div className="flex items-center gap-4 p-3 rounded-xl hover:bg-white/10 transition">
+              <LinkedInIcon className="text-green-200" />
               <span>Muhammad Bilal</span>
             </div>
 
@@ -53,8 +57,8 @@ function Footer() {
 
       </div>
 
-      {/* Bottom Bar */}
-      <div className="border-t border-white/20 py-4 text-center text-sm text-white/80">
+      {/* Bottom */}
+      <div className="relative border-t border-white/10 py-5 text-center text-sm text-white/60">
         © 2025 General Knowledge MCQs. All rights reserved.
       </div>
 
