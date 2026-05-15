@@ -1,7 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  --primary: #0F172A;
-  --secondary: #22C55E
+  --primary: #16a34a;       /* main green */
+  --primary-dark: #15803d;  /* hover */
+  --bg: #f0fdf4;            /* light background */
+  --card: #ffffff;
+  --text: #111827;
 }
-
