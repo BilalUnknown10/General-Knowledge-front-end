@@ -1,161 +1,140 @@
 import axios from "axios";
-import React from "react";
-import { useContext } from "react";
-import { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import UserContext from "../../Store/UserContext";
-import { useEffect } from "react";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 function Users() {
   const [allUsers, setAllUsers] = useState([]);
-  const token = localStorage.getItem("GKT");
+  const [loading, setLoading] = useState(true);
 
   const { Admin_Api } = useContext(UserContext);
+  const token = localStorage.getItem("GKT");
 
-  // // Get all users
-  // const getAllUsers = async () => {
-  //   try {
-  //     const response = await axios.get(`${Admin_Api}/allUsers`, {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     });
-  //     // console.log(response.data);
-  //     const users = response.data.getAllUsers;
-  //     setAllUsers(users);
-  //   } catch (error) {
-  //     console.log("Error in get all user in dashboard : ", error);
-  //   }
-  // };
-
-// Delete user by id
-const deleteUser = async (id) => {
-  try {
-    const response = await axios.delete(`${Admin_Api}/deleteUserById/${id}`,{
-      headers : {
-        "Content-Type" : "application/json",
-        Authorization : `Bearer ${token}`
-      }
-    });
-
-    console.log(response.data);
-    if(response.status === 200) {
-      toast.success(response.data.message);
-    }
-  } catch (error) {
-    console.log("Error in delete user : ", error);
-  }
-}
-
-  useEffect(() => {
-    if (token) {
-       // Get all users
+  // GET USERS
   const getAllUsers = async () => {
     try {
-      const response = await axios.get(`${Admin_Api}/allUsers`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+      const res = await axios.get(`${Admin_Api}/allUsers`, {
+        headers: { Authorization: `Bearer ${token}` },
       });
-      // console.log(response.data);
-      const users = response.data.getAllUsers;
-      setAllUsers(users);
-    } catch (error) {
-      console.log("Error in get all user in dashboard : ", error);
+
+      setAllUsers(res.data.getAllUsers || []);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
     }
   };
-      getAllUsers();
+
+  // DELETE USER
+  const deleteUser = async (id) => {
+    try {
+      const res = await axios.delete(
+        `${Admin_Api}/deleteUserById/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      toast.success(res.data.message);
+
+      // instant UI update (no reload needed)
+      setAllUsers((prev) => prev.filter((u) => u._id !== id));
+    } catch (err) {
+      toast.error("Failed to delete user");
     }
+  };
 
-    console.log("dashboard user useEffect....");
-  }, [token]);
+  useEffect(() => {
+    if (token) getAllUsers();
+  }, []);
+
   return (
-    <div>
-      <div className="py-3 px-10 bg-green-500 font-bold md:text-4xl text-white">
-        <h1>All Users</h1>
-      </div>
-     <div className="hidden md:block">
-      <div className=" font-bold text-xl px-10 py-2 text-end">Total Users : {allUsers.length}</div>
-         <div className=" flex justify-between md:mx-9 p-2 rounded-md my-10 font-bold text-xl md:text-2xl bg-green-300">
-        <h1 className=" w-1/4 ">Name</h1>
-        <h1 className=" w-1/4">Email</h1>
-        <h1 className=" w-1/4">Verification</h1>
-        <h1 className=" w-1/4">Status</h1>
-        <h1 className="w-1/4 ">Manage Users</h1>
-      </div>
-      {allUsers.map((user, i) => (
-        <div
-          key={i}
-          className="  flex justify-between  space-y-5 px-10 text-xl font-semibold"
-        >
-          <h1 className=" w-1/4">{user.userName}</h1>
-          <p className=" w-1/4">{user.email}</p>
-          <p className=" w-1/4">
-            {user?.isEmailVerified ? (
-              <span>Verified</span>
-            ) : (
-              <span className="text-red-600">UnVerified</span>
-            )}
-          </p>
-          <p className=" w-1/4">
-          {user?.isAdmin ? (
-             <span>Admin</span>
-          ): (
-             <span>User</span>
-          )}
-          </p>
-          <p className=" w-1/4">
-            <button className="bg-green-600 text-white px-3 py-1 cursor-pointer rounded-md border-none">
-              Update
-            </button>{" "}
-            <button onClick={() => deleteUser(user._id)} className="bg-red-600 text-white px-3 py-1 mx-5 cursor-pointer rounded-md border-none">
-              Delete
-            </button>
-            {/* <button className="bg-green-600 text-white px-3 py-1 cursor-pointer rounded-md border-none">
-              {user.isAdmin ? "User" : "Admin"}
-            </button> */}
-          </p>
-        </div>
-      ))}
-     </div>
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-100">
 
-      {/* For mobile view */}
-      <>
-      <div className="md:hidden font-bold text-xl px-5 py-2 text-end">Total Users : {allUsers.length}</div>
-       {allUsers.map((user, i) => (
-        <div
-          key={i}
-          className="md:hidden space-y-5 px-10 text-xl font-semibold border rounded-md border-green-400 p-5 m-4"
-        >
-          <h1 className="">Name : {user.userName}</h1>
-          <p className="">Email : {user.email}</p>
-          <p className=""> Verification : 
-            {user?.isEmailVerified ? (
-              <span>Verified</span>
-            ) : (
-              <span className="text-red-600">UnVerified</span>
-            )}
-          </p>
-          <p className="">
-          Status : {user?.isAdmin ? (
-             <span>Admin</span>
-          ): (
-             <span>User</span>
-          )}
-          </p>
-          <p className="text-end">
-            <button className="bg-green-600 text-white px-3 py-1 cursor-pointer rounded-md border-none">
-              Update
-            </button>{" "}
-            <button className="bg-red-600 text-white px-3 py-1 cursor-pointer rounded-md border-none">
-              Delete
-            </button>
-          </p>
+      {/* Header */}
+      <div className="bg-green-600 text-white px-6 py-4 text-2xl font-bold">
+        User Management
+      </div>
+
+      {/* Count */}
+      <div className="max-w-6xl mx-auto px-4 mt-4 text-right text-gray-700 font-semibold">
+        Total Users: {allUsers.length}
+      </div>
+
+      {/* Loading */}
+      {loading ? (
+        <div className="flex justify-center items-center h-60">
+          <div className="w-10 h-10 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
-      ))}
-      </>
+      ) : allUsers.length === 0 ? (
+        <p className="text-center mt-10 text-gray-500">
+          No users found
+        </p>
+      ) : (
+        <div className="max-w-6xl mx-auto px-4 mt-6 space-y-4">
+
+          {allUsers.map((user) => (
+            <div
+              key={user._id}
+              className="bg-white shadow-md hover:shadow-lg transition rounded-2xl p-5 border border-gray-100 flex flex-col md:flex-row md:items-center md:justify-between"
+            >
+
+              {/* Name + Email */}
+              <div className="md:w-1/3">
+                <h2 className="font-bold text-gray-800">
+                  {user.userName}
+                </h2>
+                <p className="text-gray-500 text-sm">{user.email}</p>
+              </div>
+
+              {/* Status */}
+              <div className="md:w-1/3 mt-3 md:mt-0 flex gap-3 flex-wrap">
+
+                <span
+                  className={`px-3 py-1 rounded-full text-sm font-semibold
+                  ${
+                    user.isEmailVerified
+                      ? "bg-green-100 text-green-700"
+                      : "bg-red-100 text-red-600"
+                  }`}
+                >
+                  {user.isEmailVerified ? "Verified" : "Unverified"}
+                </span>
+
+                <span
+                  className={`px-3 py-1 rounded-full text-sm font-semibold
+                  ${
+                    user.isAdmin
+                      ? "bg-blue-100 text-blue-700"
+                      : "bg-gray-100 text-gray-700"
+                  }`}
+                >
+                  {user.isAdmin ? "Admin" : "User"}
+                </span>
+
+              </div>
+
+              {/* Actions */}
+              <div className="md:w-1/3 mt-4 md:mt-0 flex justify-end gap-3">
+
+                <button className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl font-semibold transition">
+                  Update
+                </button>
+
+                <button
+                  onClick={() => deleteUser(user._id)}
+                  className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl font-semibold transition"
+                >
+                  Delete
+                </button>
+
+              </div>
+
+            </div>
+          ))}
+
+        </div>
+      )}
     </div>
   );
 }

@@ -1,34 +1,33 @@
-import React, { useEffect } from "react";
-import Navbar from "./Navbar";
-import { useContext } from "react";
-import UserContext from "../Store/UserContext";
-import Input from "./Input";
-import { useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import UserContext from "../Store/UserContext";
+import Input from "./Input";
 
 function Verification() {
   const [OTP, setOTP] = useState("");
   const [OTPError, setOTPError] = useState("");
   const [minutes, setMinutes] = useState(9);
   const [seconds, setSeconds] = useState(59);
-  const [verifyingOTP, setVerifyingOTP] = useState(false)
+  const [verifyingOTP, setVerifyingOTP] = useState(false);
 
   const navigate = useNavigate();
 
-  const { userDetails, User_Api, loginUserToken, refreshUserDetails } = useContext(UserContext);
+  const { userDetails, User_Api, loginUserToken, refreshUserDetails } =
+    useContext(UserContext);
 
+  // OTP input (only numbers, max 4 digits)
   const handleEvent = (e) => {
-    const OTP_Value = e.target.value;
-
-    if (OTP_Value.length < 5) {
-      setOTP(e.target.value);
-    }
+    const value = e.target.value.replace(/\D/g, "").slice(0, 4);
+    setOTP(value);
+    setOTPError("");
   };
 
+  // Verify OTP
   const emailVerification = async () => {
-   setVerifyingOTP(true);
+    setVerifyingOTP(true);
+
     try {
       const response = await axios.post(
         `${User_Api}/userEmailVerification`,
@@ -39,84 +38,80 @@ function Verification() {
           },
         }
       );
-      
-      if(response.status === 200) {
+
+      if (response.status === 200) {
         setOTP("");
-        // console.log(response.data.message);
-        await refreshUserDetails(loginUserToken);
         toast.success(response.data.message);
+
+        await refreshUserDetails(loginUserToken);
         navigate("/");
       }
     } catch (error) {
-      console.log("error in email verification function : ", error);
-       setOTPError(error.response.data.message);
+      setOTPError(error?.response?.data?.message || "Verification failed");
     } finally {
       setVerifyingOTP(false);
     }
   };
 
+  // Timer FIXED (no stale state bug)
   useEffect(() => {
     const interval = setInterval(() => {
-      setSeconds((prevSeconds) => {
-        if (prevSeconds === 0) {
+      setSeconds((prev) => {
+        if (prev === 0) {
+          setMinutes((m) => (m > 0 ? m - 1 : 0));
           return 59;
-        } else {
-          return prevSeconds - 1;
         }
-      });
-
-      setMinutes((prevMinutes) => {
-        if (seconds === 0) {
-          if (prevMinutes === 0) {
-            clearInterval(interval);
-            return 0;
-          }
-          return prevMinutes - 1;
-        }
-        return prevMinutes;
+        return prev - 1;
       });
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [seconds]);
+  }, []);
+
+  const isOtpValid = OTP.length === 4;
 
   return (
-    <div className="bg-[var(--primary)] h-[100vh] flex justify-center items-center flex-col px-8 md:px-20">
-      <div className="md:h-[50vh] h-[50vh] bg-white rounded-2xl w-[100%] md:w-[50%]">
-        <div className=" text-center my-5">
-          <h1 className="md:text-3xl font-bold text-xl">Verification OTP</h1>
-          <p className="p-5">
-            We use verification OTP based through gmail We just send OTP on your
-            register email <strong>{userDetails.email}</strong> please enter
-            your 4 digit OTP{" "}
-          </p>
+    <div className="bg-[var(--primary)] h-screen flex justify-center items-center px-5">
+      <div className="bg-white w-full md:w-1/2 rounded-2xl p-6">
+
+        <h1 className="text-2xl font-bold text-center">
+          Email Verification OTP
+        </h1>
+
+        <p className="text-center mt-3">
+          OTP sent to:{" "}
+          <strong>{userDetails?.email}</strong>
+        </p>
+
+        <div className="mt-4 text-center font-semibold">
+          Time Left: {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
         </div>
-        <div className="md:px-20 px-10">
-          <p>
-            Remaining Time : {minutes} : {seconds}{" "}
-          </p>
-        </div>
-        <div className="text-center">
+
+        <div className="mt-6 flex justify-center">
           <Input
-            type={"number"}
-            placeholder={"Enter OTP e.g 0987"}
-            inputClassName={"border w-[80%]"}
+            type="text"
+            placeholder="Enter 4-digit OTP"
+            inputClassName="border w-[80%]"
             inputValue={OTP}
             onChange={handleEvent}
           />
         </div>
-        <div className="md:px-20 px-10">
-          <p className="text-red-600">{OTPError}</p>
-        </div>
-        <div className="text-center my-5">
+
+        {OTPError && (
+          <p className="text-red-500 text-center mt-2">{OTPError}</p>
+        )}
+
+        <div className="text-center mt-6">
           <button
             onClick={emailVerification}
-            className={`bg-green-500 px-8 rounded-md font-bold md:text-xl text-white py-2 cursor-pointer hover:bg-green-300 hover:text-black ${
-              OTP.length === 4 ? "opacity-100" : "opacity-0"
-            } ${verifyingOTP ? "cursor-not-allowed" : "cursor-pointer"}`}
-            disabled = {verifyingOTP}
+            disabled={!isOtpValid || verifyingOTP}
+            className={`px-8 py-2 rounded-md font-bold transition-all duration-300 ${
+              isOtpValid && !verifyingOTP
+                ? "bg-green-500 text-white hover:bg-green-600"
+                : "bg-gray-300 text-gray-600 cursor-not-allowed"
+            }`}
           >
-            {verifyingOTP ? "Verifying..." : "Verify"}
+            {verifyingOTP ? "Verifying..." : "Verify OTP"}
           </button>
         </div>
       </div>

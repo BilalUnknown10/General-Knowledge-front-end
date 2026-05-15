@@ -8,307 +8,200 @@ import { handleDownloadPdf } from "../Store/Download_pdf";
 
 function MCQS() {
   const [allQuestions, setAllQuestions] = useState([]);
-  const [checkQuestionLoading, setCheckQuestionLoading] = useState(true);
-  const [questionNumber, setQuestionNumber] = useState(0);
-  const [submitAnswer, setSubmitAnswer] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [qIndex, setQIndex] = useState(0);
+  const [answer, setAnswer] = useState("");
   const [submitLoading, setSubmitLoading] = useState(false);
-  const token = localStorage.getItem("GKT");
 
+  const token = localStorage.getItem("GKT");
   const navigate = useNavigate();
 
-  const { User_Api, userDetails, refreshUserDetails } = useContext(UserContext);
+  const { User_Api, userDetails, refreshUserDetails } =
+    useContext(UserContext);
 
-  // Previous question...
-  const prevQuestion = () => {
-    if (questionNumber > 0) {
-      setQuestionNumber((prev) => prev - 1);
-    }
+  const prev = () => qIndex > 0 && setQIndex((p) => p - 1);
+
+  const next = () => {
+    if (qIndex < allQuestions.length - 1) setQIndex((p) => p + 1);
   };
 
-  // Next question...
-  const nextQuestion = () => {
-    if (
-      questionNumber < userDetails?.submittedAnswers?.length &&
-      questionNumber < allQuestions?.length - 1
-    ) {
-      setQuestionNumber((prev) => prev + 1);
-    }
-  };
+  const submit = async (id) => {
+    if (!answer) return toast.error("Select an answer first");
 
-  // Submit answer API..
-  const submitQuestion = async (id) => {
     setSubmitLoading(true);
     try {
-      if (!submitAnswer) {
-        return toast.error("Please select one");
-      }
-      const response = await axios.post(
+      const res = await axios.post(
         `${User_Api}/userSubmitAnswer/${id}`,
-        { submitAnswer },
+        { submitAnswer: answer },
         {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
-      if (response.status === 200) {
-        setSubmitAnswer("");
+      if (res.status === 200) {
+        setAnswer("");
         refreshUserDetails(token);
       }
-    } catch (error) {
-      console.log("error in submit question function : ", error);
+    } catch (err) {
+      toast.error("Submission failed");
     } finally {
-      setTimeout(() => {
-        setSubmitLoading(false);
-      }, 1300);
+      setSubmitLoading(false);
     }
   };
 
-  // Download all question function...
-  const handleDownloadMCQS = () => {
-    handleDownloadPdf(allQuestions);
-  };
+  const download = () => handleDownloadPdf(allQuestions);
 
   useEffect(() => {
-    document.title = "MCQ'S-page | General Knowledge";
-    if (!token) {
-      navigate("/login");
-    }
-    if (token && userDetails?.isEmailVerified === false) {
-      navigate("/");
-      toast.warn("Please Verify Your Email");
-    }
+    document.title = "MCQ Quiz | General Knowledge";
 
-    const getAllQuestions = async () => {
-      // setCheckQuestionLoading(true);
+    if (!token) navigate("/login");
+
+    const fetch = async () => {
       try {
-        const response = await axios.get(`${User_Api}/getAllQuestions`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+        const res = await axios.get(`${User_Api}/getAllQuestions`, {
+          headers: { Authorization: `Bearer ${token}` },
         });
-        setAllQuestions(response.data);
-        setTimeout(() => {
-          setCheckQuestionLoading(false);
-        }, 500);
-      } catch (error) {
-        console.log("error in get all mcq's : ", error);
+        setAllQuestions(res.data);
+      } finally {
+        setLoading(false);
       }
     };
 
-    getAllQuestions();
+    fetch();
+  }, []);
 
-    if (userDetails?.submittedAnswers?.length > 0) {
-      setQuestionNumber(userDetails?.submittedAnswers?.length - 1);
-    } else {
-      setQuestionNumber(userDetails?.submittedAnswers?.length);
-    }
-    console.log("useEffect....");
-  }, [userDetails, User_Api, token]);
-  console.log(questionNumber);
+  const q = allQuestions[qIndex];
+  const isAnswered =
+    userDetails?.submittedAnswers?.length > qIndex;
 
   return (
-    <div className="h-[90vh] flex flex-col justify-center items-center">
-      {/* MCQ'S header section */}
-      <div className="bg-[var(--primary)] rounded-t-xl md:w-1/2 w-[90vw] px-5 py-2 flex justify-between items-center ">
-        <div className="md:text-3xl text-xl font-bold text-white">
-          <h1>Question</h1>
-        </div>
-        <div className="flex gap-5">
-          <ArrowRightAltIcon
-            onClick={prevQuestion}
-            className="rotate-180 text-white !text-5xl hover:cursor-pointer"
-          />
-          <ArrowRightAltIcon
-            onClick={nextQuestion}
-            className="text-white !text-5xl hover:cursor-pointer"
-          />
-        </div>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-100 flex items-center justify-center px-3 py-6">
 
-      {/* MCQ'S section */}
-      {submitLoading ? (
-        <div className="flex justify-center items-center h-[50vh] md:w-1/2 w-[90vw] rounded-b-xl border border-[var(--primary)]">
-          <div className="flex flex-col justify-center items-center gap-4">
-            {/* Spinner */}
-            <div className="w-12 h-12 border-4  border-[var(--primary)] border-t-transparent rounded-full animate-spin"></div>
-            <p className="text-[var(--primary)] font-bold text-xl">Loading...</p>
+      <div className="w-full max-w-2xl bg-white shadow-xl rounded-2xl overflow-hidden">
+
+        {/* Header */}
+        <div className="bg-green-600 text-white flex justify-between items-center px-5 py-4">
+          <h1 className="text-lg sm:text-2xl font-bold">
+            Question {qIndex + 1}
+          </h1>
+
+          <div className="flex gap-3">
+            <button onClick={prev}>
+              <ArrowRightAltIcon className="rotate-180 !text-4xl" />
+            </button>
+            <button onClick={next}>
+              <ArrowRightAltIcon className="!text-4xl" />
+            </button>
           </div>
         </div>
-      ) : (
-        <div className="border border-[var(--primary)] overflow-y-auto h-[50vh] md:w-1/2 w-[90vw] rounded-b-xl">
-          {checkQuestionLoading ? (
-            // <div className="flex justify-center items-center h-[50vh] md:w-1/2 w-[90vw] rounded-b-xl border border-green-500">
-          <div className="flex flex-col justify-center items-center h-[100%] gap-4">
-            {/* Spinner */}
-            <div className="w-12 h-12 border-4 border-[var(--primary)] border-t-transparent rounded-full animate-spin"></div>
-            <p className="text-[var(--primary)] font-bold text-xl">Loading...</p>
-          </div>
-        // </div>
+
+        {/* Body */}
+        <div className="p-5 sm:p-8">
+
+          {/* Loading */}
+          {loading ? (
+            <div className="h-60 flex flex-col justify-center items-center">
+              <div className="w-10 h-10 border-4 border-green-500 border-t-transparent rounded-full animate-spin" />
+              <p className="mt-3 text-green-600 font-semibold">
+                Loading Questions...
+              </p>
+            </div>
+          ) : !q ? (
+            <p className="text-center text-gray-500">No Questions Found</p>
           ) : (
             <>
-              {allQuestions.length < 1 ? (
-                <div className="h-[45vh] flex justify-center items-center font-bold text-2xl">
-                  <p>No MCQ'S Posted Yet</p>
+              {/* Question */}
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
+                {qIndex + 1}. {q.question}
+              </h2>
+
+              {/* Options / Result */}
+              {!isAnswered ? (
+                <div className="mt-6 space-y-3">
+
+                  {q.answers.map((opt, i) => (
+                    <label
+                      key={i}
+                      className={`flex items-center gap-3 p-3 border rounded-xl cursor-pointer transition
+                      hover:border-green-500 hover:bg-green-50
+                      ${answer === opt ? "border-green-600 bg-green-50" : ""}`}
+                    >
+                      <input
+                        type="radio"
+                        name="answer"
+                        value={opt}
+                        onChange={(e) => setAnswer(e.target.value)}
+                      />
+                      <span className="text-gray-700 font-medium">
+                        {opt}
+                      </span>
+                    </label>
+                  ))}
+
+                  {/* Submit */}
+                  <button
+                    onClick={() => submit(q._id)}
+                    disabled={submitLoading}
+                    className="w-full mt-4 bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-semibold transition"
+                  >
+                    {submitLoading ? "Submitting..." : "Submit Answer"}
+                  </button>
                 </div>
               ) : (
-                <>
-                  <>
-                    {/* Question */}
-                    <div className="p-10 flex flex-col">
-                      <p className="font-bold text-xl">
-                        <strong className="text-[var(--primary)] text-2xl">
-                          {questionNumber + 1}.{" "}
-                        </strong>
-                        {allQuestions[questionNumber]?.question}
-                      </p>
-                      {questionNumber >
-                      userDetails?.submittedAnswers?.length - 1 ? (
-                        <>
-                          <div className="mt-10">
-                            {allQuestions[questionNumber]?.answers.map(
-                              (answer, i) => (
-                                <div
-                                  key={i}
-                                  className="flex gap-4 items-center"
-                                >
-                                  <input
-                                    type="radio"
-                                    id={answer}
-                                    name="answer"
-                                    className="cursor-pointer"
-                                    value={answer}
-                                    onClick={(e) =>
-                                      setSubmitAnswer(e.target.value)
-                                    }
-                                  />
-                                  <label
-                                    htmlFor={answer}
-                                    className="text-xl font-semibold cursor-pointer"
-                                  >
-                                    {answer}
-                                  </label>
-                                </div>
-                              )
-                            )}
-                          </div>
-                          <div className="text-end self-end mt-10">
-                            <button
-                              disabled={submitLoading}
-                              onClick={() =>
-                                submitQuestion(allQuestions[questionNumber]._id)
-                              }
-                              className={`px-10 py-1 rounded-md bg-[var(--primary)] font-semibold text-white text-xl ${
-                                submitLoading
-                                  ? "cursor-not-allowed bg-[var(--primary)]"
-                                  : "cursor-pointer"
-                              }`}
-                            >
-                              {submitLoading ? "Please Wait..." : "Submit"}
-                            </button>
-                          </div>
-                        </>
-                      ) : (
-                        <div className="md:p-10">
-                          {userDetails?.submittedAnswers?.[questionNumber]
-                            ?.status === true ? (
-                            <>
-                              <div className="md:mt-8 mt-20 font-bold text-xl">
-                                <h1 className="text-green-500 mb-5 text-2xl">
-                                  <>Correct ✅</>
-                                </h1>
-                                <p>
-                                  Your Answer :{" "}
-                                  <strong className="text-green-500">
-                                    {
-                                      userDetails?.submittedAnswers?.[
-                                        questionNumber
-                                      ]?.answer
-                                    }
-                                  </strong>
-                                </p>
-                                <p>
-                                  Correct Answer :{" "}
-                                  <strong className="text-green-500">
-                                    {
-                                      allQuestions[questionNumber]
-                                        ?.correctAnswer
-                                    }
-                                  </strong>
-                                </p>
-                              </div>
-                              {questionNumber !== allQuestions?.length - 1 && (
-                                <div className="text-end self-end mt-10 flex justify-end gap-5">
-                                  <button
-                                    onClick={nextQuestion}
-                                    className={`px-10 py-1 rounded-md cursor-pointer bg-[var(--primary)] font-semibold text-white text-xl `}
-                                  >
-                                    Next
-                                  </button>
-                                </div>
-                              )}
-                            </>
-                          ) : (
-                            <>
-                              <div className="md:mt-8 mt-20 font-bold text-xl">
-                                <h1 className="text-red-500 mb-5">Wrong ❌</h1>
-                                <p>
-                                  Your Answer :{" "}
-                                  <strong className="text-red-500">
-                                    {
-                                      userDetails?.submittedAnswers?.[
-                                        questionNumber
-                                      ]?.answer
-                                    }
-                                  </strong>
-                                </p>
-                                <p>
-                                  Correct Answer :{" "}
-                                  <strong className="text-green-500">
-                                    {
-                                      allQuestions[questionNumber]
-                                        ?.correctAnswer
-                                    }
-                                  </strong>
-                                </p>
-                              </div>
-                              {questionNumber !== allQuestions?.length - 1 && (
-                                <div className="text-end self-end mt-10 flex justify-end">
-                                  <button
-                                    onClick={nextQuestion}
-                                    className={`px-10 py-1 rounded-md bg-[var(--primary)] font-semibold text-white text-xl cursor-pointer `}
-                                  >
-                                    Next
-                                  </button>
-                                </div>
-                              )}
-                            </>
-                          )}
-                        </div>
-                      )}
+                <div className="mt-6">
+
+                  {userDetails?.submittedAnswers?.[qIndex]?.status ? (
+                    <div className="text-green-600 font-bold text-lg">
+                      ✅ Correct Answer
                     </div>
-                  </>
-                  {userDetails?.submittedAnswers?.length ===
-                    allQuestions?.length &&
-                    questionNumber === allQuestions.length - 1 && (
-                      <div className=" text-end px-10 ">
-                        <button
-                          onClick={handleDownloadMCQS}
-                          className="bg-[var(--primary)] text-white font-bold px-6 py-1 rounded-md cursor-pointer"
-                        >
-                          Download All MCQ'S
-                        </button>
-                      </div>
-                    )}
-                </>
+                  ) : (
+                    <div className="text-red-600 font-bold text-lg">
+                      ❌ Wrong Answer
+                    </div>
+                  )}
+
+                  <div className="mt-4 space-y-2 text-gray-700">
+                    <p>
+                      Your Answer:{" "}
+                      <span className="font-semibold">
+                        {userDetails?.submittedAnswers?.[qIndex]?.answer}
+                      </span>
+                    </p>
+
+                    <p>
+                      Correct Answer:{" "}
+                      <span className="font-semibold text-green-600">
+                        {q.correctAnswer}
+                      </span>
+                    </p>
+                  </div>
+
+                  {qIndex < allQuestions.length - 1 && (
+                    <button
+                      onClick={next}
+                      className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl"
+                    >
+                      Next Question
+                    </button>
+                  )}
+                </div>
               )}
             </>
           )}
+
+          {/* Download */}
+          {userDetails?.submittedAnswers?.length ===
+            allQuestions?.length &&
+            qIndex === allQuestions.length - 1 && (
+              <button
+                onClick={download}
+                className="mt-6 w-full bg-gray-800 text-white py-3 rounded-xl hover:bg-black"
+              >
+                Download Results PDF
+              </button>
+            )}
         </div>
-      )}
+      </div>
     </div>
   );
 }

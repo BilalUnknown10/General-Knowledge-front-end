@@ -1,83 +1,3 @@
-// import React, { useContext, useEffect, useState } from "react";
-// import UserContext from "../Store/UserContext";
-// import axios from "axios";
-// import { useNavigate } from 'react-router-dom';
-
-// function PointsTable() {
-//   const { User_Api } = useContext(UserContext);
-//   const [allUsers, setAllUsers] = useState([]);
-//   const [allQuestions, setAllQuestions] = useState("");
-//   const navigate = useNavigate();
-
-//   const token = localStorage.getItem("GKT");
-
-//   useEffect(() => {
-//     if(!token) {
-//       navigate('/login')
-//     }
-//     if (token) {
-//       const getAllUsers = async () => {
-//         try {
-//           const response = await axios.get(`${User_Api}/getAllUsers`, {
-//             headers: {
-//               "Content-Type": "application/json",
-//               Authorization: `Bearer ${token}`,
-//             },
-//           });
-//           if (response.status === 200) {
-//             setAllUsers(response.data);
-//           }
-//         } catch (error) {
-//           console.log("Error in get all user point table : ", error);
-//         }
-//       };
-
-//       const getAllQuestions = async () => {
-//         try {
-//           const response = await axios.get(`${User_Api}/getAllQuestions`, {
-//             headers : {
-//               "Content-Type" : "application/json",
-//               Authorization : `Bearer ${token}`
-//             }
-//           });
-
-//           if(response.status === 200) {
-//             setAllQuestions(response.data)
-//           }
-//         } catch (error) {
-//           console.log("Error in get All questions in points table page : ", error)
-//         }
-//       }
-
-//       getAllUsers();
-//       getAllQuestions();
-//     }
-//   },[]);
-
-//   return (
-//     <div>
-//       <div className="hidden md:flex justify-between px-10 bg-green-300 p-5 text-2xl font-bold">
-//         <h1 className="w-1/5">Name</h1>
-//         <h1 className="w-1/5 text-center">Total Questions</h1>
-//         <h1 className="w-1/5 text-center"><span className="text-green-900">Correct</span> / <span className="text-red-500">Wrong</span></h1>
-//         <h1 className="w-1/5 text-center">Percentage</h1>
-//         <h1 className="w-1/5 text-end">Total Points</h1>
-//       </div>
-//       {allUsers.map((user, i) => (
-//         <div key={i} className={`border border-green-500 md:bg-green-500 md:flex justify-between m-5 p-5 rounded-md text-xl font-semibold text-black md:text-white`}>
-//             <h1 className="md:w-1/5"><span className="md:hidden">Name : </span> {user.userName}</h1>
-//             <p className="md:w-1/5 md:text-center"><span className="md:hidden">Total Questions : </span> {user?.submittedAnswers?.length} / {allQuestions.length}</p>
-//             <p className="md:w-1/5 md:text-center"><span className="md:hidden"><span className="text-green-500">Correct</span> / <span className="text-red-500">Wrong</span> : </span>  <span className="text-green-900">{user?.submittedAnswers.filter(item => item.status === true).length}</span> / <span className="text-red-500">{user?.submittedAnswers.filter(item => item.status === false).length}</span></p>
-//             <p className="md:w-1/5 md:text-center"><span className="md:hidden">Percentage : </span> {Math.floor(user?.submittedAnswers.filter(item => item.status === true).length/allQuestions.length*100)}%</p>
-//             <p className="md:w-1/5 md:text-end"> <span className="md:hidden">Total Points : </span>  {user?.submittedAnswers.filter(item => item.status === true).length}</p>
-//         </div>
-//       ))}
-//     </div>
-//   );
-// }
-
-// export default PointsTable;
-
 import React, { useContext, useEffect, useState } from "react";
 import UserContext from "../Store/UserContext";
 import axios from "axios";
@@ -92,129 +12,110 @@ function PointsTable() {
   const token = localStorage.getItem("GKT");
 
   useEffect(() => {
-    if (!token) {
-      navigate("/login");
-    }
-    if (token) {
-      const getAllUsers = async () => {
-        try {
-          const response = await axios.get(`${User_Api}/getAllUsers`, {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          if (response.status === 200) {
-            setAllUsers(response.data);
-          }
-        } catch (error) {
-          console.log("Error in get all user point table : ", error);
-        }
-      };
+    if (!token) navigate("/login");
 
-      const getAllQuestions = async () => {
-        try {
-          const response = await axios.get(`${User_Api}/getAllQuestions`, {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          });
+    const fetchData = async () => {
+      try {
+        const [usersRes, quesRes] = await Promise.all([
+          axios.get(`${User_Api}/getAllUsers`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          axios.get(`${User_Api}/getAllQuestions`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
 
-          if (response.status === 200) {
-            setAllQuestions(response.data);
-          }
-        } catch (error) {
-          console.log("Error in get All questions in points table page : ", error);
-        }
-      };
+        setAllUsers(usersRes.data);
+        setAllQuestions(quesRes.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
 
-      getAllUsers();
-      getAllQuestions();
-    }
+    fetchData();
   }, [token]);
 
+  const totalQ = allQuestions.length || 1;
+
+  const getCorrect = (user) =>
+    user?.submittedAnswers?.filter((i) => i.status).length || 0;
+
+  const getWrong = (user) =>
+    user?.submittedAnswers?.filter((i) => !i.status).length || 0;
+
+  const getPercent = (user) =>
+    Math.floor((getCorrect(user) / totalQ) * 100);
+
+  const sortedUsers = [...allUsers].sort((a, b) => {
+    const diff = getCorrect(b) - getCorrect(a);
+    return diff;
+  });
+
   return (
-    <div>
-      <div className="hidden md:flex justify-between px-10 bg-green-300 p-5 text-2xl font-bold">
-        <h1 className="w-1/5">Name</h1>
-        <h1 className="w-1/5 text-center">Total Questions</h1>
-        <h1 className="w-1/5 text-center">
-          <span className="text-green-900">Correct</span> /{" "}
-          <span className="text-red-500">Wrong</span>
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-100 px-3 py-8">
+
+      {/* Header */}
+      <div className="max-w-5xl mx-auto text-center mb-8">
+        <h1 className="text-3xl sm:text-4xl font-bold text-green-700">
+          🏆 Leaderboard
         </h1>
-        <h1 className="w-1/5 text-center">Percentage</h1>
-        <h1 className="w-1/5 text-end">Total Points</h1>
+        <p className="text-gray-500 mt-2">
+          Top performers based on MCQ performance
+        </p>
       </div>
 
-      {[...allUsers]
-        .sort((a, b) => {
-          const total = allQuestions.length || 1;
+      {/* Table Header (Desktop) */}
+      <div className="hidden md:flex max-w-5xl mx-auto bg-green-600 text-white rounded-xl px-6 py-4 font-bold">
+        <div className="w-1/5">Name</div>
+        <div className="w-1/5 text-center">Questions</div>
+        <div className="w-1/5 text-center">Correct / Wrong</div>
+        <div className="w-1/5 text-center">%</div>
+        <div className="w-1/5 text-end">Points</div>
+      </div>
 
-          const aCorrect =
-            a?.submittedAnswers?.filter((item) => item.status === true).length ||
-            0;
-          const bCorrect =
-            b?.submittedAnswers?.filter((item) => item.status === true).length ||
-            0;
+      {/* Users */}
+      <div className="max-w-5xl mx-auto mt-4 space-y-4">
 
-          const aPercentage = (aCorrect / total) * 100;
-          const bPercentage = (bCorrect / total) * 100;
-
-          // First sort by percentage, then by total correct answers
-          if (bPercentage === aPercentage) {
-            return bCorrect - aCorrect;
-          }
-          return bPercentage - aPercentage;
-        })
-        .map((user, i) => (
+        {sortedUsers.map((user, i) => (
           <div
             key={i}
-            className="border border-green-500 md:bg-green-500 md:flex justify-between m-5 p-5 rounded-md text-xl font-semibold text-black md:text-white"
+            className="bg-white shadow-md hover:shadow-lg transition rounded-xl p-5 flex flex-col md:flex-row md:items-center"
           >
-            <h1 className="md:w-1/5">
-              <span className="md:hidden">Name : </span> {user.userName}
-            </h1>
 
-            <p className="md:w-1/5 md:text-center">
-              <span className="md:hidden">Total Questions : </span>{" "}
-              {user?.submittedAnswers?.length} / {allQuestions.length}
-            </p>
+            {/* Name */}
+            <div className="md:w-1/5 font-semibold text-lg text-gray-800">
+              #{i + 1} {user.userName}
+            </div>
 
-            <p className="md:w-1/5 md:text-center">
-              <span className="md:hidden">
-                <span className="text-green-500">Correct</span> /{" "}
-                <span className="text-red-500">Wrong</span> :{" "}
-              </span>
-              <span className="text-green-900">
-                {user?.submittedAnswers.filter((item) => item.status === true)
-                  .length}
+            {/* Total */}
+            <div className="md:w-1/5 text-gray-600 md:text-center mt-2 md:mt-0">
+              {user?.submittedAnswers?.length} / {totalQ}
+            </div>
+
+            {/* Correct / Wrong */}
+            <div className="md:w-1/5 md:text-center mt-2 md:mt-0">
+              <span className="text-green-600 font-semibold">
+                {getCorrect(user)}
               </span>{" "}
               /{" "}
-              <span className="text-red-500">
-                {user?.submittedAnswers.filter((item) => item.status === false)
-                  .length}
+              <span className="text-red-500 font-semibold">
+                {getWrong(user)}
               </span>
-            </p>
+            </div>
 
-            <p className="md:w-1/5 md:text-center">
-              <span className="md:hidden">Percentage : </span>{" "}
-              {Math.floor(
-                (user?.submittedAnswers.filter((item) => item.status === true)
-                  .length /
-                  allQuestions.length) *
-                  100
-              )}
-              %
-            </p>
+            {/* Percentage */}
+            <div className="md:w-1/5 md:text-center mt-2 md:mt-0 font-semibold">
+              {getPercent(user)}%
+            </div>
 
-            <p className="md:w-1/5 md:text-end">
-              <span className="md:hidden">Total Points : </span>{" "}
-              {user?.submittedAnswers.filter((item) => item.status === true)
-                .length}
-            </p>
+            {/* Points */}
+            <div className="md:w-1/5 md:text-end mt-2 md:mt-0 font-bold text-green-700">
+              {getCorrect(user)}
+            </div>
           </div>
         ))}
+      </div>
+
     </div>
   );
 }

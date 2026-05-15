@@ -1,105 +1,129 @@
-import axios from 'axios';
-import React from 'react'
-import { useContext } from 'react';
-import { useState } from 'react'
-import UserContext from '../../Store/UserContext';
-import { useEffect } from 'react';
-import { toast } from 'react-toastify';
+import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
+import UserContext from "../../Store/UserContext";
+import { toast } from "react-toastify";
 
 function All_Feedbacks() {
-    const [allFeedbacks, setAllFeedbacks] = useState([]);
+  const [allFeedbacks, setAllFeedbacks] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    const [refresh, setRefresh] = useState(false);
+  const { Admin_Api } = useContext(UserContext);
+  const token = localStorage.getItem("GKT");
 
-    const {Admin_Api} = useContext(UserContext);
+  const getAllFeedbacks = async () => {
+    try {
+      const res = await axios.get(`${Admin_Api}/allFeedbacks`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-    const token = localStorage.getItem("GKT");
-
-    const getAllFeedbacks = async () => {
-        try {
-            const response = await axios.get(`${Admin_Api}/allFeedbacks`,{
-                headers : {
-                    "Content-Type" : "application/json",
-                    Authorization : `Bearer ${token}`
-                }
-            });
-            // console.log(response.data);
-            if(response.status === 200) {
-                setAllFeedbacks(response.data);
-            }
-        } catch (error) {
-            console.log("error in all feedbacks : ", error);
-        }
+      setAllFeedbacks(res.data);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    const deleteFeedback = async (id) => {
-      try {
-        const response = await axios.delete(`${Admin_Api}/deleteFeedbackById/${id}`,{
-          headers : {
-            "Content-Type" : "application/json",
-            Authorization : `Bearer ${token}`
-          }
-        });
-        if(response.status === 200) {
-          toast.success(response.data.message);
-          setRefresh(!refresh);
+  const deleteFeedback = async (id) => {
+    try {
+      const res = await axios.delete(
+        `${Admin_Api}/deleteFeedbackById/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
         }
-      } catch (error) {
-        console.log("error in delete feedback : ", error);
-      }
+      );
+
+      toast.success(res.data.message);
+      setAllFeedbacks((prev) =>
+        prev.filter((item) => item._id !== id)
+      );
+    } catch (err) {
+      toast.error("Delete failed");
     }
+  };
 
-    const deleteAllFeedbacks = async () => {
-      try {
-        const response = await axios.delete(`${Admin_Api}/deleteAllFeedbacks`,{
-          headers : {
-            "Content-Type" : "application/json",
-            Authorization : `Bearer ${token}`
-          }
-        });
+  const deleteAllFeedbacks = async () => {
+    try {
+      const res = await axios.delete(`${Admin_Api}/deleteAllFeedbacks`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-        if(response.status === 200){
-          setRefresh(!refresh);
-          toast.success(response.data.message);
-        }
-      } catch (error) {
-        console.log("error in delete all feedbacks : ", error);
-      }
+      toast.success(res.data.message);
+      setAllFeedbacks([]);
+    } catch (err) {
+      toast.error("Failed to delete all");
     }
+  };
 
-    useEffect(() => {
-        if(token) {
-          getAllFeedbacks();
-        }
+  useEffect(() => {
+    if (token) getAllFeedbacks();
+  }, []);
 
-        console.log("feedbacks useEffect ....")
-    },[token, refresh]);
   return (
-    <div>
-      <div className="py-3 px-10 bg-green-500 font-bold md:text-4xl text-white">
-        <h1>All Feedbacks</h1>
-      </div>
-      {allFeedbacks.length > 0 && (
-        <div className="my-10 px-10 text-end">
-        <button onClick={deleteAllFeedbacks} className="bg-red-500 text-xl font-bold cursor-pointer text-white px-10 py-2 rounded-md">
-          Delete All Feedbacks
-        </button>
-      </div>
-      )}
-      
-      {allFeedbacks.map((feedback, i) => {
-        return<div key={i} className='px-10 py-5 border border-green-500 my-5 mx-10 rounded-md'>
-            <h1 className='text-xl font-bold'>{feedback.name}</h1>
-            <p>{feedback.feedback}</p>
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-100">
 
-            <div className="mt-5 text-end">
-          <button onClick={() => deleteFeedback(feedback._id)} className="px-10 bg-red-500 cursor-pointer text-white py-2 rounded-md font-bold">Delete</button>
-        </div>        
+      {/* Header */}
+      <div className="bg-green-600 text-white px-6 py-4 text-2xl font-bold">
+        Feedback Management
+      </div>
+
+      {/* Actions */}
+      {allFeedbacks.length > 0 && (
+        <div className="max-w-5xl mx-auto px-4 mt-6 flex justify-end">
+          <button
+            onClick={deleteAllFeedbacks}
+            className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-xl font-semibold transition"
+          >
+            Delete All
+          </button>
         </div>
-      })}
-      
+      )}
+
+      {/* Loading */}
+      {loading ? (
+        <div className="flex justify-center items-center h-60">
+          <div className="w-10 h-10 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      ) : allFeedbacks.length === 0 ? (
+        <p className="text-center mt-10 text-gray-500">
+          No feedback found
+        </p>
+      ) : (
+        <div className="max-w-5xl mx-auto px-4 mt-6 space-y-4">
+
+          {allFeedbacks.map((feedback) => (
+            <div
+              key={feedback._id}
+              className="bg-white shadow-md hover:shadow-lg transition rounded-2xl p-5 border border-gray-100"
+            >
+
+              {/* Name */}
+              <h2 className="text-lg font-bold text-gray-800">
+                {feedback.name}
+              </h2>
+
+              {/* Message */}
+              <p className="mt-2 text-gray-600 leading-relaxed">
+                {feedback.feedback}
+              </p>
+
+              {/* Actions */}
+              <div className="mt-4 flex justify-end">
+                <button
+                  onClick={() => deleteFeedback(feedback._id)}
+                  className="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-xl font-semibold transition"
+                >
+                  Delete
+                </button>
+              </div>
+
+            </div>
+          ))}
+
+        </div>
+      )}
     </div>
-  )
+  );
 }
 
-export default All_Feedbacks
+export default All_Feedbacks;

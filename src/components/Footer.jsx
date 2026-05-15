@@ -1,43 +1,64 @@
 import React from "react";
-import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead';
-import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
+import PhoneAndroidIcon from "@mui/icons-material/PhoneAndroid";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
 
 function Footer() {
   return (
-    <div className="bg-[var(--primary)] text-white">
-      <div className=" md:p-8 md:flex gap-40">
-      <div className="md:w-1/2 p-4">
-        <h1 className="md:text-3xl text-xl border-b font-bold tracking-widest mt-5">
-          General Knowledge
-        </h1>
-        <p className="md:text-xl leading-loose mt-5">
-          We’re committed to delivering value, innovation, and customer satisfaction. Follow us for updates, resources, and support.
-          Sharing insights, ideas, and inspiration. Thanks for visiting — see you again soon!
-        </p>
-        <button className="mt-5 md:text-xl w-[150px] py-2  rounded-md tracking-wider text-white cursor-pointer bg-green-700 hover:bg-green-700 transition-all duration-500 ease-in-out hover:w-full">
-          Get In Touch
-        </button>
+    <footer className="bg-gradient-to-br from-green-700 via-green-600 to-green-800 text-white">
+
+      <div className="max-w-6xl mx-auto px-6 py-12 grid md:grid-cols-2 gap-10">
+
+        {/* Left Section */}
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-wide border-b border-white/30 pb-2">
+            General Knowledge
+          </h1>
+
+          <p className="mt-6 text-white/90 leading-relaxed">
+            Learn, practice, and improve your knowledge through interactive MCQs.
+            We aim to provide a simple and effective learning experience for everyone.
+          </p>
+
+          <button className="mt-6 px-6 py-3 bg-white text-green-700 font-semibold rounded-xl hover:bg-green-100 transition">
+            Get In Touch
+          </button>
+        </div>
+
+        {/* Right Section */}
+        <div>
+          <h2 className="text-2xl md:text-3xl font-bold border-b border-white/30 pb-2">
+            Contact Us
+          </h2>
+
+          <div className="mt-6 space-y-4 text-white/90">
+
+            <div className="flex items-center gap-3 hover:text-white transition">
+              <MarkEmailReadIcon />
+              <span>ourweb.pk@gmail.com</span>
+            </div>
+
+            <div className="flex items-center gap-3 hover:text-white transition">
+              <PhoneAndroidIcon />
+              <span>0340XXXXXXX</span>
+            </div>
+
+            <div className="flex items-center gap-3 hover:text-white transition">
+              <LinkedInIcon />
+              <span>Muhammad Bilal</span>
+            </div>
+
+          </div>
+        </div>
+
       </div>
-      <div className="md:w-1/2 p-4">
-          <h1 className="md:text-3xl border-b  text-xl font-bold tracking-widest mt-5">
-          Contact Us
-        </h1>
-          <div className="md:text-xl w-1/2 flex items-center gap-3 mt-5">
-          <MarkEmailReadIcon/> ourweb.pk@gmail.com
-        </div>
-        <div className="md:text-xl flex items-center gap-3 mt-5">
-          <PhoneAndroidIcon/> 0340XXXXXXX
-        </div>
-        <div className="md:text-xl flex items-center gap-3 mt-5">
-          <LinkedInIcon/> Muhammad Bilal
-        </div>
+
+      {/* Bottom Bar */}
+      <div className="border-t border-white/20 py-4 text-center text-sm text-white/80">
+        © 2025 General Knowledge MCQs. All rights reserved.
       </div>
-    </div>
-    <div className="py-4 border-t text-center text-white">
-      <p>© 2025 General Knowledge MCQs. All rights reserved.</p>
-    </div>
-    </div>
+
+    </footer>
   );
 }
 

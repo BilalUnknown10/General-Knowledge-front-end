@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Input from "../components/Input";
 import ClearIcon from "@mui/icons-material/Clear";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import UserContext from "../Store/UserContext";
 import { Link, useNavigate } from "react-router-dom";
-import { useContext } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -17,25 +16,17 @@ function Login() {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
-
   const { User_Api, savedTokeInLocalStorage } = useContext(UserContext);
 
-  const visiblePassword = () => {
-    setVisiblePass(!visiblePass);
+  const togglePassword = () => setVisiblePass(!visiblePass);
+
+  const handleInput = (e) => {
+    const { name, value } = e.target;
+    if (name === "email") setEmail(value);
+    if (name === "password") setPassword(value);
   };
 
-  const handleInput = async (e) => {
-    try {
-      const { name, value } = e.target;
-
-      if (name === "email") setEmail(value);
-      if (name === "password") setPassword(value);
-    } catch (error) {
-      console.log("error in login component handle input function", error);
-    }
-  };
-
-  const Login = async () => {
+  const LoginUser = async () => {
     setLoading(true);
     try {
       const response = await axios.post(`${User_Api}/userLogin`, {
@@ -43,123 +34,120 @@ function Login() {
         password,
       });
 
+      const { token, message } = response.data;
+
       if (response.status === 200) {
-        const { token, message } = response.data;
         await savedTokeInLocalStorage(token);
         toast.success(message);
-
-        setEmail("");
-        setPassword("");
         navigate("/");
       }
+
+      setEmail("");
+      setPassword("");
     } catch (error) {
-      // console.log("error in login component login function",error.response);
-      setLoginError(error.response.data);
-      toast.error(error.response.data);
+      setLoginError(error?.response?.data || "Login failed");
+      toast.error(error?.response?.data || "Login failed");
     } finally {
       setLoading(false);
     }
   };
 
-  const backToHome = () => {
-    navigate("/", { replace: true });
-  };
-
-  useEffect(() =>{
-    document.title = "Login-page"
-  },[])
-  
+  useEffect(() => {
+    document.title = "Login | Knowledge Hub";
+  }, []);
 
   return (
-    <div className=" p-20 flex flex-col items-center h-[100vh] justify-center bg-[var(--primary)]">
-      <div className="relative border border-gray-500 shadow-md shadow-gray-500 rounded-md md:w-[400px] w-[90vw] md:p-10 py-10 px-5 bg-green-50">
-        <div onClick={backToHome}>
-          <ClearIcon className="absolute text-white bg-red-500 top-2 cursor-pointer right-2" />
-        </div>
-        <h1 className="md:text-3xl text-2xl text-center border-b pb-2 font-bold tracking-widest">
-          Login
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-white to-green-100 px-4">
+
+      {/* Card */}
+      <div className="relative w-full max-w-md bg-white rounded-2xl shadow-xl p-6 sm:p-10 border border-gray-100">
+
+        {/* Close */}
+        <button
+          onClick={() => navigate("/", { replace: true })}
+          className="absolute top-4 right-4 p-1 rounded-full hover:bg-red-100 transition"
+        >
+          <ClearIcon className="text-red-500" />
+        </button>
+
+        {/* Heading */}
+        <h1 className="text-3xl font-bold text-center text-gray-800">
+          Welcome Back
         </h1>
-        {loginError ? (
-          <p className="text-red-500 text-center mt-3">{loginError}</p>
-        ) : (
-          ""
+        <p className="text-center text-gray-500 text-sm mt-1">
+          Login to continue learning
+        </p>
+
+        {/* Error */}
+        {loginError && (
+          <p className="text-red-500 text-center mt-4 text-sm bg-red-50 py-2 rounded-md">
+            {loginError}
+          </p>
         )}
-        <div>
+
+        {/* Inputs */}
+        <div className="mt-8 space-y-4">
+
           <Input
-            mainDivClassName={"my-5 mt-12"}
-            label={"Email : "}
-            type={"email"}
-            name={"email"}
-            inputId={"email"}
+            label="Email"
+            type="email"
+            name="email"
             inputValue={email}
-            inputClassName={"border w-full"}
-            placeholder={"Example123@gmail.com"}
+            placeholder="example@gmail.com"
             onChange={handleInput}
             disabled={loading}
+            inputClassName="border rounded-lg w-full p-3 focus:outline-none focus:ring-2 focus:ring-green-400"
           />
-        </div>
-        <div className="relative">
-          <Input
-            mainDivClassName={"my-5"}
-            label={"Password : "}
-            type={`${visiblePass ? "text" : "password"}`}
-            name={"password"}
-            inputId={"password"}
-            inputValue={password}
-            inputClassName={"border w-full"}
-            placeholder={"Password"}
-            onChange={handleInput}
-            disabled={loading}
-          />
-          {visiblePass ? (
-            <VisibilityIcon
-              className="absolute top-8 md:top-12 cursor-pointer right-4"
-              onClick={visiblePassword}
+
+          {/* Password */}
+          <div className="relative">
+            <Input
+              label="Password"
+              type={visiblePass ? "text" : "password"}
+              name="password"
+              inputValue={password}
+              placeholder="Enter password"
+              onChange={handleInput}
+              disabled={loading}
+              inputClassName="border rounded-lg w-full p-3 focus:outline-none focus:ring-2 focus:ring-green-400"
             />
-          ) : (
-            <VisibilityOffIcon
-              className="absolute top-8 md:top-12 cursor-pointer right-4"
-              onClick={visiblePassword}
-            />
-          )}
-        </div>
-        <div className="text-end">
-          <button
-            onClick={Login}
-            disabled={loading}
-            className={`md:text-xl md:tracking-widest text-white px-8 py-2 rounded transition-all duration-300 w-full 
-    ${
-      loading
-        ? "bg-gray-400 cursor-not-allowed"
-        : "bg-green-500 hover:bg-green-600 cursor-pointer"
-    }
-  `}
-          >
-            {loading ? "Logging in..." : "Login"}
-          </button>
-        </div>
-        <div className="text-center">
-          <Link to={'/forgetPassword'}>
-          <p className="mt-5 font-semibold text-blue-600 hover:cursor-pointer">Forget Password?</p>
-          </Link>
-        </div>
-        <div className="border-t w-full mt-10 relative">
-          <h1 className="absolute left-1/2 -translate-x-1/2 -top-3 bg-white px-2 text-sm text-gray-600">
-            OR
-          </h1>
+
+            <div
+              onClick={togglePassword}
+              className="absolute right-3 top-9 cursor-pointer text-gray-600"
+            >
+              {visiblePass ? <VisibilityIcon /> : <VisibilityOffIcon />}
+            </div>
+          </div>
         </div>
 
-        {/* <div className="mt-8 text-center">
-          <button
-            className="bg-blue-500 cursor-not-allowed md:text-xl md:tracking-widest text-white px-4 py-2 rounded transition-all duration-300 w-full hover:bg-blue-600"
-          >
-            Login with Google
-          </button>
-        </div> */}
-        <div className="mt-8 text-center">
-          <Link to={"/signup"}>
-            <button className="bg-green-500 cursor-pointer md:text-xl md:tracking-widest text-white px-4 py-2 rounded transition-all duration-300 w-full hover:bg-green-600">
-              Signup
+        {/* Button */}
+        <button
+          onClick={LoginUser}
+          disabled={loading}
+          className={`mt-6 w-full py-3 rounded-lg font-semibold text-white transition-all duration-300
+          ${
+            loading
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-green-500 hover:bg-green-600"
+          }`}
+        >
+          {loading ? "Logging in..." : "Login"}
+        </button>
+
+        {/* Links */}
+        <div className="text-center mt-5 space-y-2">
+          <Link to="/forgetPassword" className="text-sm text-blue-600 hover:underline">
+            Forgot Password?
+          </Link>
+
+          <p className="text-gray-500 text-sm">
+            Don’t have an account?
+          </p>
+
+          <Link to="/signup">
+            <button className="w-full mt-2 py-3 rounded-lg border border-green-500 text-green-600 hover:bg-green-50 transition">
+              Create Account
             </button>
           </Link>
         </div>

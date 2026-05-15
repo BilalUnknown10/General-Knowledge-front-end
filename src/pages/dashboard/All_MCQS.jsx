@@ -5,147 +5,169 @@ import { toast } from "react-toastify";
 
 function All_MCQS() {
   const [allMCQS, setAllMCQS] = useState([]);
-  const [sendMailLoading, setSendMailLoading] = useState(false);
-
+  const [loading, setLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState(false);
 
   const { Admin_Api } = useContext(UserContext);
-
   const token = localStorage.getItem("GKT");
 
   const getAllMCQS = async () => {
     try {
-      const response = await axios.get(`${Admin_Api}/allMCQS`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+      const res = await axios.get(`${Admin_Api}/allMCQS`, {
+        headers: { Authorization: `Bearer ${token}` },
       });
 
-      if (response.status === 200) {
-        setAllMCQS(response.data.getAllMCQS);
-      }
-    } catch (error) {
-      console.log("error in all mcqs dashboard : ", error);
+      setAllMCQS(res.data.getAllMCQS || []);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
     }
   };
 
   const deleteAllMCQS = async () => {
+    setActionLoading(true);
     try {
-      const response = await axios.delete(`${Admin_Api}/deleteAllMCQS`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+      const res = await axios.delete(`${Admin_Api}/deleteAllMCQS`, {
+        headers: { Authorization: `Bearer ${token}` },
       });
-      // console.log(response.data);
-      toast.success(response.data.message);
-    } catch (error) {
-      console.log("error in delete all mcqs : ", error);
+
+      toast.success(res.data.message);
+      setAllMCQS([]);
+    } catch (err) {
+      toast.error("Failed to delete MCQs");
+    } finally {
+      setActionLoading(false);
     }
   };
 
   const deleteAllAnswers = async () => {
+    setActionLoading(true);
     try {
-      const response = await axios.delete(`${Admin_Api}/deleteAllAnswers`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+      const res = await axios.delete(`${Admin_Api}/deleteAllAnswers`, {
+        headers: { Authorization: `Bearer ${token}` },
       });
-      // console.log(response.data);
-      toast.success(response.data.message);
-    } catch (error) {
-      console.log("error in delete all answers : ", error);
+
+      toast.success(res.data.message);
+    } catch (err) {
+      toast.error("Failed to delete answers");
+    } finally {
+      setActionLoading(false);
     }
   };
 
   const sendMailToAllUsers = async () => {
-    setSendMailLoading(true)
+    setActionLoading(true);
     try {
-      const response = await axios.post(`${Admin_Api}/sendEmailToAllUser`,{},{
-        headers : {
-          "Content-Type" : "application/json",
-          Authorization : `Bearer ${token}`
-        }
-      });
+      const res = await axios.post(
+        `${Admin_Api}/sendEmailToAllUser`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
-      toast.success(response.data.message)
-    } catch (error) {
-      console.log("Error in send mail to all users : ", error);
-    }finally {
-      setSendMailLoading(false);
+      toast.success(res.data.message);
+    } catch (err) {
+      toast.error("Email sending failed");
+    } finally {
+      setActionLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     getAllMCQS();
   }, []);
+
   return (
-    <div className="">
-      <div className="py-3 px-10 bg-green-500 font-bold md:text-4xl text-white">
-        <h1>All MCQ'S</h1>
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-100">
+
+      {/* Header */}
+      <div className="bg-green-600 text-white px-6 py-4 text-2xl font-bold">
+        MCQ Management
       </div>
 
-      <div className="my-10 px-10 flex flex-col md:flex-row md:justify-end md:items-center gap-5 text-end">
+      {/* Action Bar */}
+      <div className="max-w-6xl mx-auto px-4 mt-6 flex flex-col md:flex-row gap-3 md:justify-end">
+
         <button
           onClick={deleteAllMCQS}
-          disabled={sendMailLoading}
-          className="bg-red-500 text-xl font-bold cursor-pointer text-white px-10 py-2 rounded-md"
+          disabled={actionLoading}
+          className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-xl font-semibold transition"
         >
-          Delete All MCQ'S
+          Delete All MCQs
         </button>
-        
+
         <button
           onClick={deleteAllAnswers}
-          disabled={sendMailLoading}
-          className="bg-red-500 text-xl font-bold cursor-pointer text-white px-10 py-2 rounded-md"
+          disabled={actionLoading}
+          className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-xl font-semibold transition"
         >
           Delete All Answers
         </button>
 
         <button
           onClick={sendMailToAllUsers}
-          disabled={sendMailLoading}
-          className="bg-green-500 text-xl font-bold cursor-pointer text-white px-10 py-2 rounded-md"
+          disabled={actionLoading}
+          className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-xl font-semibold transition"
         >
-          {sendMailLoading ? "Sending Emails...." : "Send Mail To All Users"}
+          {actionLoading ? "Processing..." : "Send Email"}
         </button>
+
       </div>
 
-      {allMCQS.map((question, i) => (
-        <div
-          key={i}
-          className="border border-green-500 m-5 rounded-md py-5 px-10"
-        >
-          {/* Question */}
-          <div className="">
-            <p className="font-bold text-xl"> {question.question}</p>
-          </div>
-
-          {/* Choices */}
-          <div className="my-3">
-            {question.answers.map((answer, i) => {
-              return (
-                <p key={i} className="text-xl px-2">
-                  {answer}
-                </p>
-              );
-            })}
-          </div>
-
-          {/* Correct anser */}
-          <div className="text-xl">
-            <p>Correct Answer : {question.correctAnswer}</p>
-          </div>
-
-          {/* Buttons */}
-          <div className="mt-5 text-end">
-            <button className="px-10 bg-red-500 cursor-pointer text-white py-2 rounded-md font-bold">
-              Delete
-            </button>
-          </div>
+      {/* Loading */}
+      {loading ? (
+        <div className="flex justify-center items-center h-60">
+          <div className="w-10 h-10 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
-      ))}
+      ) : allMCQS.length === 0 ? (
+        <p className="text-center mt-10 text-gray-500">
+          No MCQs found
+        </p>
+      ) : (
+        <div className="max-w-6xl mx-auto px-4 mt-6 space-y-5">
+
+          {allMCQS.map((q, i) => (
+            <div
+              key={i}
+              className="bg-white shadow-md hover:shadow-lg transition rounded-2xl p-6 border border-gray-100"
+            >
+
+              {/* Question */}
+              <h2 className="text-lg font-bold text-gray-800">
+                {i + 1}. {q.question}
+              </h2>
+
+              {/* Options */}
+              <div className="mt-3 grid gap-2">
+                {q.answers.map((ans, idx) => (
+                  <p
+                    key={idx}
+                    className="px-3 py-1 bg-gray-50 rounded-md text-gray-700"
+                  >
+                    {ans}
+                  </p>
+                ))}
+              </div>
+
+              {/* Correct Answer */}
+              <p className="mt-3 text-green-700 font-semibold">
+                Correct Answer: {q.correctAnswer}
+              </p>
+
+              {/* Actions */}
+              <div className="mt-5 flex justify-end">
+                <button
+                  className="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-xl font-semibold transition"
+                >
+                  Delete
+                </button>
+              </div>
+
+            </div>
+          ))}
+
+        </div>
+      )}
     </div>
   );
 }

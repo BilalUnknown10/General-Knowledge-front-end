@@ -1,21 +1,55 @@
 import React from "react";
 
-function Input({type, inputClassName, inputValue, inputId, mainDivClassName, label, placeholder, onChange,name, disabled}) {
+function Input({
+  type = "text",
+  inputClassName = "",
+  inputValue = "",
+  inputId,
+  mainDivClassName = "",
+  label = "",
+  placeholder = "",
+  onChange,
+  name,
+  disabled = false,
+  required = true,
+  error = ""
+}) {
   return (
-    <div className={`${mainDivClassName}`}>
-      <label className="md:text-2xl" htmlFor={inputId}>{label}</label>
+    <div className={mainDivClassName}>
+
+      {label && (
+        <label
+          htmlFor={inputId}
+          className="block mb-1 md:text-lg font-semibold text-gray-700"
+        >
+          {label}
+        </label>
+      )}
+
       <input
-        type={`${type}`}
-        value={`${inputValue}`}
-        name={`${name}`}
-        autoComplete="off"
-        className={`${inputClassName} outline-0 px-2 py-2 md:px-6 md:py-3 rounded-md md:text-xl`}
-        id={`${inputId}`}
-        placeholder={`${placeholder}`}
+        type={type}
+        value={inputValue}
+        name={name}
+        id={inputId}
+        placeholder={placeholder}
         onChange={onChange}
-        required
-        disabled = {disabled}
+        autoComplete="off"
+        disabled={disabled}
+        required={required}
+        className={`w-full outline-none px-3 py-2 md:px-5 md:py-3 rounded-lg border transition
+        ${
+          error
+            ? "border-red-500 focus:ring-red-300"
+            : "border-gray-300 focus:ring-green-300"
+        }
+        focus:ring-2 ${inputClassName}`}
       />
+
+      {/* Error Message */}
+      {error && (
+        <p className="text-red-500 text-sm mt-1">{error}</p>
+      )}
+
     </div>
   );
 }

@@ -1,54 +1,97 @@
 import React, { useContext, useState } from "react";
 import Input from "./Input";
-import axios from 'axios';
+import axios from "axios";
 import UserContext from "../Store/UserContext";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 function ForgetPasswordLink() {
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const { User_Api } = useContext(UserContext);
 
-  const {User_Api} = useContext(UserContext);
-
-  const sendForgePasswordLink = async () => {
-    try {
-        const response = await axios.post(`${User_Api}/forgetPasswordLink`,{email});
-        if(response.status === 200) {
-            toast.success(response.data);
-            navigate("/login", {replace : true});
-        }
-    } catch (error) {
-        console.log("error in send password forget link", error);
-        toast.error(error.response.data.message)
+  const sendForgetPasswordLink = async () => {
+    if (!email) {
+      return toast.error("Please enter your email");
     }
-  }
+
+    setLoading(true);
+
+    try {
+      const res = await axios.post(
+        `${User_Api}/forgetPasswordLink`,
+        { email }
+      );
+
+      toast.success(res.data.message || "Email sent successfully");
+
+      setEmail("");
+
+      navigate("/login", { replace: true });
+    } catch (err) {
+      toast.error(
+        err?.response?.data?.message || "Failed to send email"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="bg-[var(--primary)] min-h-[100vh] w-[100vw] flex justify-center items-center">
-      <div className="bg-white h-[90vh] w-[90vw] rounded-md flex flex-col justify-center items-center">
-        <div className="text-center py-5 md:py-10">
-          <h1 className="font-bold text-2xl md:text-4xl">Please Enter Your Registered Email</h1>
-          <p className="font-bold text-xl py-5">We will send forget password link on your register email</p>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 via-white to-green-200 px-4">
+
+      <div className="w-full max-w-md bg-white shadow-2xl rounded-2xl p-6 sm:p-10 space-y-6">
+
+        {/* Title */}
+        <div className="text-center">
+          <h1 className="text-2xl sm:text-3xl font-bold text-green-600">
+            Forgot Password
+          </h1>
+          <p className="text-gray-500 mt-2 text-sm sm:text-base">
+            Enter your registered email and we’ll send you a reset link
+          </p>
         </div>
-        <div className="flex justify-center flex-col items-center">
+
+        {/* Email Input */}
+        <div>
           <Input
-            mainDivClassName={"my-5 mt-12"}
-            // label={"Email : "}
+            mainDivClassName={"w-full"}
             type={"email"}
             name={"email"}
-            inputId={"email"}
             inputValue={email}
-            inputClassName={"border w-[70vw]"}
-            placeholder={"Example123@gmail.com"}
+            placeholder={"Enter your email"}
             onChange={(e) => setEmail(e.target.value)}
+            disabled={loading}
           />
-          <div className="text-center w-[70vw] flex justify-between mt-6">
-            <button className="md:w-[30vh] w-[15vh] hover:cursor-pointer font-bold md:text-2xl bg-green-500 py-3 rounded-md text-white ">Back</button>
-            <button onClick={sendForgePasswordLink} className="md:w-[30vh] w-[15vh] hover:cursor-pointer font-bold md:text-2xl bg-green-500 py-3 rounded-md text-white ">Send Email Link</button>
         </div>
+
+        {/* Buttons */}
+        <div className="flex gap-4 pt-4">
+
+          <button
+            onClick={() => navigate(-1)}
+            className="w-1/2 py-3 rounded-xl bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300 transition"
+          >
+            Back
+          </button>
+
+          <button
+            onClick={sendForgetPasswordLink}
+            disabled={loading}
+            className={`w-1/2 py-3 rounded-xl font-semibold text-white transition
+            ${
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-green-600 hover:bg-green-700"
+            }`}
+          >
+            {loading ? "Sending..." : "Send Link"}
+          </button>
+
         </div>
+
       </div>
     </div>
   );

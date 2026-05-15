@@ -1,120 +1,139 @@
-import React, { useEffect, useState } from "react";
-import { useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import UserContext from "../Store/UserContext";
-import axios from 'axios';
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 function FeedbackForm() {
-    const {userDetails, User_Api, loginUserToken} = useContext(UserContext);
-    const [userFeedback, setUserFeedback] = useState({
-      name : "",
-      email : "",
-      image : "",
-      feedback : ""
-    });
+  const { userDetails, User_Api, loginUserToken } = useContext(UserContext);
 
-    const navigate = useNavigate();
+  const [userFeedback, setUserFeedback] = useState({
+    name: "",
+    email: "",
+    image: "",
+    feedback: "",
+  });
 
-    const handleFeedback = (e) => {
-      const {name, value} = e.target;
-      setUserFeedback((prev) => (
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleFeedback = (e) => {
+    const { name, value } = e.target;
+    setUserFeedback((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const submitFeedback = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const res = await axios.post(
+        `${User_Api}/feedback`,
+        userFeedback,
         {
-          ...prev,
-          [name] : value
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${loginUserToken}`,
+          },
         }
-      ))
-    };
+      );
 
-    const submitFeedback = async (e) => {
-      e.preventDefault();
-      try {
-        const response = await axios.post(`${User_Api}/feedback`,userFeedback,{
-          headers : {
-            "Content-Type" : "Application/json",
-            Authorization : `Bearer ${loginUserToken} `
-          }
-        });
-        
-        if(response.status === 201){
-          setUserFeedback({
-            feedback : "",
-          });
-          
-          navigate('/');
-          toast.success(response.data.message);
-        }
-      } catch (error) {
-        console.log("Error from front end submit feed back: ",error);
-      }
-    }
+      toast.success(res.data.message || "Feedback submitted");
 
-    useEffect(() => {
-      if (userDetails) {
       setUserFeedback((prev) => ({
         ...prev,
-        name: userDetails.userName || "",
-        email: userDetails.email || "",
-        image : userDetails?.userProfileImage || null
+        feedback: "",
       }));
+
+      navigate("/");
+    } catch (err) {
+      toast.error("Failed to submit feedback");
+    } finally {
+      setLoading(false);
     }
-    
-    if(!userDetails) {
+  };
+
+  useEffect(() => {
+    if (!userDetails) {
       navigate("/login");
+      return;
     }
-  },[userDetails]);
+
+    setUserFeedback({
+      name: userDetails.userName || "",
+      email: userDetails.email || "",
+      image: userDetails?.userProfileImage || "",
+      feedback: "",
+    });
+  }, [userDetails]);
+
   return (
-    <div className="px-4 flex justify-center items-center md:h-[90vh] h-[85vh] bg-green-300">
-      <form action="" className="bg-white px-5 py-10 rounded-md md:p-16">
-        <div className="text-xl font-bold tracking-wider text-center">
-          Your Feedback
-        </div>
-        <div className="text-xl md:p-4 py-4">
-          <label className="font-bold" htmlFor="userName">
-            Name :{" "}
-          </label>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 via-white to-green-200 px-4">
+
+      <form
+        onSubmit={submitFeedback}
+        className="w-full max-w-2xl bg-white shadow-2xl rounded-2xl p-6 sm:p-10 space-y-6"
+      >
+
+        {/* Title */}
+        <h1 className="text-2xl sm:text-3xl font-bold text-center text-green-600">
+          Share Your Feedback
+        </h1>
+
+        {/* Name */}
+        <div>
+          <label className="font-semibold text-gray-700">Name</label>
           <input
             type="text"
             name="name"
             readOnly
             value={userFeedback.name}
-            className="border w-full border-gray-300 shadow-md rounded-md outline-0 py-2 px-4 md:text-xl"
+            className="w-full mt-2 p-3 border rounded-xl bg-gray-100 outline-none"
           />
         </div>
-        <div className="text-xl md:p-4 py-4">
-          <label className="font-bold" htmlFor="email">
-            Email :{" "}
-          </label>
+
+        {/* Email */}
+        <div>
+          <label className="font-semibold text-gray-700">Email</label>
           <input
             type="email"
-            readOnly
-            id="email"
             name="email"
+            readOnly
             value={userFeedback.email}
-            className="border border-gray-300 shadow-md w-full rounded-md outline-0 py-2 px-4 md:text-xl"
+            className="w-full mt-2 p-3 border rounded-xl bg-gray-100 outline-none"
           />
         </div>
-        <div className="text-xl md:p-4 py-4">
-          <label className="font-bold" htmlFor="message">
-            
-            Feedback :{" "}
-          </label>
+
+        {/* Feedback */}
+        <div>
+          <label className="font-semibold text-gray-700">Feedback</label>
           <textarea
-            id="message"
             name="feedback"
             value={userFeedback.feedback}
             onChange={handleFeedback}
-            cols={"30"}
-            rows={"5"}
-            className="border border-gray-300 shadow-md w-full rounded-md outline-0 py-2 px-4 md:text-xl"
+            rows={5}
+            placeholder="Write your experience..."
+            className="w-full mt-2 p-3 border rounded-xl outline-none focus:ring-2 focus:ring-green-400"
           />
         </div>
-        <div className="p-2 text-end">
-          <button onClick={submitFeedback} className="shadow-md  cursor-pointer hover:tracking-wider transition-all ease-in-out duration-500 hover:bg-green-500 md:hover:text-white font-semibold md:text-black md:text-xl py-2 px-5 rounded-md bg-green-400 text-white">
-            Submit Feedback
-          </button>
-        </div>
+
+        {/* Button */}
+        <button
+          type="submit"
+          disabled={loading}
+          className={`w-full py-3 rounded-xl font-semibold text-white transition
+          ${
+            loading
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-green-600 hover:bg-green-700"
+          }`}
+        >
+          {loading ? "Submitting..." : "Submit Feedback"}
+        </button>
+
       </form>
+
     </div>
   );
 }
